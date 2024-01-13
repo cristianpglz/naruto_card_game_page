@@ -1,0 +1,60 @@
+<!--
+    Online store project for the MASTERMIND academy
+-->
+<!DOCTYPE html>
+<html lang="ES-es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NARUTO CARD GAME</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400&display=swap" rel="stylesheet">
+    <link rel="icon" href="./IMGs/necessary_images/png-konoha.png">
+    <link rel="stylesheet" href="./CSS/reset.css">
+    <link rel="stylesheet" href="./CSS/form.css">
+</head>
+<body>
+    <header>
+        <img src="./IMGs/necessary_images/png-konoha.png" alt="image main logo" width="300">
+    </header>
+    <main>
+        <form action="shop.html" id="formEntry">
+            <div class="itemform">
+                <label for="nickname">Introduce tu nick</label>
+                <input type="text" name="nickname" id="nick_name"  placeholder="Nick" autocomplete="nickname" required minlength="4">
+            </div>
+            <div class="itemform">
+                <select name="set_difficulty" id="set_difficulty">
+                    <option value="easy">easy</option>
+                    <option value="half">half</option>
+                    <option value="difficult">difficult</option>
+                </select>
+            </div>
+            <div class="itemform">
+                <select name="number_of_cards" id="number_of_cards">
+                    <option value="nine">3x3</option>
+                    <option value="sixteen">4x4</option>
+                    <option value="twenty-five">5x5</option>
+                </select>
+                
+            </div>
+            <div class="itemform">
+                
+            </div>
+            <div class="itemform">
+                <input type="submit" value="Entrar" id="entry">
+            </div>
+            <div>
+                <p id="error"></p>
+            </div>
+        </form>
+    </main>
+    <footer>
+        <p>Curso HTML, CSS y JS</p>
+    </footer>
+    <script src="./JS/userData.js"></script>
+    <script src="./JS/entryForm.js"></script>
+
+</body>
+</html>
