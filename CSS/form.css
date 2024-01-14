@@ -1,0 +1,68 @@
+body{
+    background-image: url(../IMGs/village-konoha.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    width:30%;
+    padding-left: 35%;
+    padding-right: 35%;
+    margin-top: 30px;
+}
+main, header, footer{
+    display: grid;
+    justify-content: center;
+    text-align: center;
+    background-color:rgba(169, 169, 169, 0.515);
+    padding: 3%;
+}
+
+
+
+#formEntry{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.itemform{
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    padding: 10px;
+}
+#itemform,select,input{
+    background-color: rgba(0, 0, 0, 0.582);
+    border-radius: 10px;
+    color: white;
+    height: 25px;
+
+}
+
+#logo{
+    width: 250px;
+}
+#avatar_imgs{
+    background-color: rgba(0, 0, 0, 0.311);
+    display: grid;
+    grid-template-columns: 1fr 100px 100px 100px;
+    grid-template-rows: repeat(2,1fr);
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+#avatar_select{
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    width: 200px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+.avatar{
+    width: 100px;
+}
+
+#button{
+    width: 100px;
+    justify-content: center;
+}

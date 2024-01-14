@@ -16,33 +16,41 @@
 </head>
 <body>
     <header>
-        <img src="./IMGs/necessary_images/png-konoha.png" alt="image main logo" width="300">
+        <img id="logo" src="./IMGs/necessary_images/png-konoha.png" alt="image main logo" width="300">
     </header>
     <main>
         <form action="shop.html" id="formEntry">
             <div class="itemform">
-                <label for="nickname">Introduce tu nick</label>
-                <input type="text" name="nickname" id="nick_name"  placeholder="Nick" autocomplete="nickname" required minlength="4">
+                <label for="nickname">Introduce tu Nick</label>
+                <input type="text" name="nickname" id="nick_name"  placeholder="Nick" value="Nick" autocomplete="nickname" required minlength="4">
             </div>
             <div class="itemform">
+                <label for="set_difficulty">Escoge la dificultad</label>
                 <select name="set_difficulty" id="set_difficulty">
-                    <option value="easy">easy</option>
-                    <option value="half">half</option>
-                    <option value="difficult">difficult</option>
+                    <option value="easy">Facil</option>
+                    <option value="half">Media</option>
+                    <option value="difficult">Dificil</option>
                 </select>
             </div>
             <div class="itemform">
+                <label for="set_difficulty">Escoge tamaño</label>
                 <select name="number_of_cards" id="number_of_cards">
                     <option value="nine">3x3</option>
                     <option value="sixteen">4x4</option>
                     <option value="twenty-five">5x5</option>
                 </select>
-                
             </div>
-            <div class="itemform">
-                
+            <div class="avatar_form">
+                <ul id="avatar_imgs">
+                    <li id="avatar_select"><img src="./IMGs/avatar/gaara_avatar.png" alt="gaara_avatar"></li>
+                    <li><img class="avatar" src="./IMGs/avatar/kakashi_avatar.png" alt="kakashi_avatar"></li>
+                    <li><img class="avatar" src="./IMGs/avatar/lee_avatar.png" alt="lee_avatar"></li>
+                    <li><img class="avatar" src="./IMGs/avatar/naruto_avatar.png" alt="naruto_avatar"></li>
+                    <li><img class="avatar" src="./IMGs/avatar/sakura_avatar.png" alt="sakura_avatar"></li>
+                    <li><img class="avatar" src="./IMGs/avatar/shikamaru_avatar.png" alt="shikamaru_avatar"></li>
+                </ul>
             </div>
-            <div class="itemform">
+            <div id="button" class="itemform">
                 <input type="submit" value="Entrar" id="entry">
             </div>
             <div>
