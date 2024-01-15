@@ -4,12 +4,16 @@ body{
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
-    width:30%;
-    padding-left: 35%;
-    padding-right: 35%;
+    width:30vw;
+    min-width: 300px;
+    min-height: 500px;
+    max-width: 500px;
+    max-height: 500px;
+    padding-left: 33%;
+    padding-right: 33%;
     margin-top: 30px;
     font-family: 'Poppins',sans-serif;
-    font-size: 18px;
+    font-size: 90%;
 }
 main, header, footer{
     display: grid;
@@ -28,7 +32,7 @@ main, header, footer{
 }
 
 #button{
-    width: 100px;
+    width: 10vw;
     justify-content: center;
 }
 
@@ -36,17 +40,19 @@ main, header, footer{
     background-color: rgba(0, 0, 0, 0.582);
     border-radius: 10px;
     color: white;
-    height: 25px;
+    margin-top: 5px;
+    display: inline;
+    text-align: center;
 }
 
 #logo{
-    width: 250px;
+    width: 15vw;
 }
 
 #avatar_imgs{
     background-color: rgba(0, 0, 0, 0.311);
     display: grid;
-    grid-template-columns: 1fr 100px 100px 100px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: repeat(2,1fr);
     align-items: center;
     justify-content: center;
@@ -57,23 +63,27 @@ main, header, footer{
 #avatar_select{
     grid-column: 1;
     grid-row: 1 / span 2;
-    width: 200px;
+    width: 15vw;
     border: 1px solid black;
     border-radius: 10px;
 }
 #error{
     color: red;
-    font-size:13px;
+    font-size:80%;
+    margin-top: 5px;
+}
+#major_avatar{
+    width: 15vw;
 }
 
 /*CLASS*/
 .itemform{
     display: flex;
     flex-direction: column;
-    width: 250px;
+    width: 20vw;
     padding: 10px;
 }
 
 .avatar{
-    width: 100px;
+    width: 5vw;
 }
