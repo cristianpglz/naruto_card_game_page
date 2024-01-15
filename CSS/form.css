@@ -8,6 +8,8 @@ body{
     padding-left: 35%;
     padding-right: 35%;
     margin-top: 30px;
+    font-family: 'Poppins',sans-serif;
+    font-size: 18px;
 }
 main, header, footer{
     display: grid;
@@ -18,29 +20,29 @@ main, header, footer{
 }
 
 
-
+/*IDs*/
 #formEntry{
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.itemform{
-    display: flex;
-    flex-direction: column;
-    width: 250px;
-    padding: 10px;
+
+#button{
+    width: 100px;
+    justify-content: center;
 }
+
 #itemform,select,input{
     background-color: rgba(0, 0, 0, 0.582);
     border-radius: 10px;
     color: white;
     height: 25px;
-
 }
 
 #logo{
     width: 250px;
 }
+
 #avatar_imgs{
     background-color: rgba(0, 0, 0, 0.311);
     display: grid;
@@ -51,6 +53,7 @@ main, header, footer{
     border-radius: 10px;
     border: 1px solid black;
 }
+
 #avatar_select{
     grid-column: 1;
     grid-row: 1 / span 2;
@@ -58,11 +61,19 @@ main, header, footer{
     border: 1px solid black;
     border-radius: 10px;
 }
-.avatar{
-    width: 100px;
+#error{
+    color: red;
+    font-size:13px;
 }
 
-#button{
+/*CLASS*/
+.itemform{
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    padding: 10px;
+}
+
+.avatar{
     width: 100px;
-    justify-content: center;
 }

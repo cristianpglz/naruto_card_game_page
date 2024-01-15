@@ -1,5 +1,5 @@
 <!--
-    Online store project for the MASTERMIND academy
+Online store project for the MASTERMIND academy
 -->
 <!DOCTYPE html>
 <html lang="ES-es">
@@ -19,10 +19,13 @@
         <img id="logo" src="./IMGs/necessary_images/png-konoha.png" alt="image main logo" width="300">
     </header>
     <main>
-        <form action="shop.html" id="formEntry">
+        <form action="card_game.html" id="formEntry">
             <div class="itemform">
                 <label for="nickname">Introduce tu Nick</label>
-                <input type="text" name="nickname" id="nick_name"  placeholder="Nick" value="Nick" autocomplete="nickname" required minlength="4">
+                <input type="text" name="nickname" id="nick_name"  placeholder="Nick"  autocomplete="nickname" required minlength="4">
+                <div>
+                    <p id="error"></p>
+                </div>
             </div>
             <div class="itemform">
                 <label for="set_difficulty">Escoge la dificultad</label>
@@ -33,7 +36,7 @@
                 </select>
             </div>
             <div class="itemform">
-                <label for="set_difficulty">Escoge tamaño</label>
+                <label for="number_of_cards">Escoge tamaño</label>
                 <select name="number_of_cards" id="number_of_cards">
                     <option value="nine">3x3</option>
                     <option value="sixteen">4x4</option>
@@ -52,9 +55,6 @@
             </div>
             <div id="button" class="itemform">
                 <input type="submit" value="Entrar" id="entry">
-            </div>
-            <div>
-                <p id="error"></p>
             </div>
         </form>
     </main>
