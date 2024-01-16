@@ -1,0 +1,29 @@
+body{
+    background-image: url(../IMGs/village-konoha.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    width: 60%;
+    padding-left: 20%;
+    padding-right: 20%;
+}
+main, header, footer{
+    display: grid;
+    justify-content: center;
+    text-align: center;
+    background-color:rgba(169, 169, 169, 0.515);
+    padding: 3%;
+}
+#logo{
+    width: 30%;
+}
+.cards{
+    width: 10vw;
+    margin: 0 2vw 2vw 2vw;
+}
+#all_the_cards{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: repeat(2,1fr);
+}
