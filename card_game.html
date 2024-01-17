@@ -16,17 +16,52 @@ Online store project for the MASTERMIND academy
 </head>
 <body>
     <header>
+        <div id="container_song">
+            <img id="img_song" src="./IMGs/necessary_images/play_audio.png" alt="">
+            <audio id="song" src="./sound/naruto_music.m4a" autoplay loop muted></audio>
+        </div>
         <img id="logo" src="./IMGs/necessary_images/png-konoha.png" alt="image main logo" width="300">
     </header>
     <main>
-        <ul id="all_the_cards">
-            <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter"></li>
-            <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter"></li>
-            <li><img class="cards" src="./IMGs/game_characters/itachi.png" alt="back_of_a_letter"></li>
-            <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter"></li>
-            <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter"></li>
-            <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter"></li>
-        </ul>
+        <div id="container_game">
+            <div id="container_cards">
+                <ul id="all_the_cards">
+                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter"></li>
+                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter"></li>
+                    <li><img class="cards" src="./IMGs/game_characters/yamato.png" alt="back_of_a_letter"></li>
+                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter"></li>
+                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter"></li>
+                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter"></li>
+                </ul>
+            </div>
+            <div id="container_marker">
+                <form id="formEntry" action="card_game.html">
+                    <div id="user_information">
+                        <img id="major_avatar" class="marker" src="./IMGs/avatar/gaara_avatar.png" alt="gaara_avatar">
+                        <input class="marker" type="text" name="nickname" id="nick_name" readonly>
+                    </div>
+                    <div class="information">
+                        <label for="countdown">Tiempo Restante</label>
+                        <input class="marker" type="number" value="30" name="countdown"  id="countdown" readonly>
+                    </div>
+                    <div class="information">
+                        <label for="countdown">Puntos Obtenidos</label>
+                        <input class="marker" type="number" value="0" name="" id="" readonly>
+
+                    </div>
+                    <div class="information">
+                        <label for="countdown">dificultad</label>
+                        <input class="marker" type="text"  name="set_difficulty" id="set_difficulty" readonly>
+
+                    </div>                        
+                </form>
+                <div id="container_button">
+                    <button class="skills_button">ver cartas 2s</button>
+                    <button class="skills_button">descartar una pareja</button>
+                    <button class="skills_button">hola</button>
+            </div>
+            </div>
+        </div>
     </main>
     <footer>
         <p>Curso HTML, CSS y JS</p>
