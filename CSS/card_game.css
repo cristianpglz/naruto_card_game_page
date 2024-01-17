@@ -80,6 +80,7 @@ input{
   grid-column: 2;
   display: grid;
   grid-template-rows: repeat(2,1fr);
+  position: static;
 }
 #container_button{
   grid-row: 2;
@@ -152,6 +153,10 @@ input{
 .cards:hover{
   transition: 1s;
   width: 12vw;
-  margin: 0vw;
+  margin: 0px;
   cursor: pointer;
+}
+#song{
+  width: 200vw;
+  background-image: url(../IMGs/necessary_images/play_audio.png);
 }

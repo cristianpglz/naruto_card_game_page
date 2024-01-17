@@ -1,3 +1,23 @@
+
+
+var muted_song;
+var song;
+var cards;
+var a;
+var song_muted_img;
+
+song = document.getElementById("song");
+
+function play() {
+    if (song.muted == "muted"){
+                
+    }
+}
+
+
+
+
+
 // Capture User Data
 get_Recover_data();
 
