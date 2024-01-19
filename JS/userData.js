@@ -4,36 +4,42 @@ var nick_user;
 var chosen_difficulty;
 var chosen_size;
 var geo_location;
-var selected_avatar;
-
+var avatar;
 
 
 function Recover_data(){
     nick_user = document.getElementById("nick_name");
-    chosen_difficulty = document.getElementById("set_difficulty").value;
-    chosen_size = document.getElementById("number_of_cards").value;
-    selected_avatar = document.getElementById("avatar_select");
-    geo_location = document.getElementById("geolocationSearch")
+    chosen_difficulty = document.getElementById("set_difficulty");
+    chosen_size = document.getElementById("number_of_cards");
+    geo_location = document.getElementById("geolocationSearch");
+    avatar = document.getElementById("major_avatar");
 
+    console.log("Recovered data:", { nick_user, chosen_difficulty, chosen_size, avatar, geo_location });
 
-    sessionStorage.setItem('nick_name', nick_user);
-    sessionStorage.setItem('set_difficulty', chosen_difficulty);
-    sessionStorage.setItem('number_of_cards', chosen_size);
-    sessionStorage.setItem('avatar_select', selected_avatar);
+    sessionStorage.setItem('nick_name', nick_user.value);
+    sessionStorage.setItem('set_difficulty', chosen_difficulty.value);
+    sessionStorage.setItem('number_of_cards', chosen_size.value);
     sessionStorage.setItem('geolocationSearch', geo_location);
-    
+    sessionStorage.setItem("major_avatar", avatar.src);
 }
+
+
 
 
 function get_Recover_data(){
     nick_user = sessionStorage.getItem('nick_name');
     chosen_difficulty = sessionStorage.getItem('set_difficulty');
     chosen_size = sessionStorage.getItem('number_of_cards');
-    selected_avatar = sessionStorage.getItem('avatar_select');
+    avatar = sessionStorage.getItem('major_avatar');
     geo_location = sessionStorage.getItem('geolocationSearch');
     
-    return { nick_user, chosen_difficulty, chosen_size, selected_avatar, geo_location };
+    console.log("Recovered data:", nick_user, chosen_difficulty, chosen_size, avatar, geo_location);
+    
+    return { nick_user, chosen_difficulty, chosen_size, avatar, geo_location };
 }
+
+
+
 
 function checkUserData() {
     var { nick_user } = get_Recover_data();
@@ -45,6 +51,7 @@ function checkUserData() {
     console.log("Estoy aquí");
     return true;
 }
+
 
 function locationData() {
     if (!navigator.geolocation) {
@@ -61,7 +68,7 @@ function locationData() {
 
 
 function userHistory() {
-    var { nick_user, chosen_difficulty, chosen_size, selected_avatar, geolocationSearch } = get_Recover_data();
+    var { nick_user, chosen_difficulty, chosen_size, avatar, geolocationSearch } = get_Recover_data();
 
     var historyStorage = localStorage.getItem('save_history');
     var save_history;
@@ -76,7 +83,7 @@ function userHistory() {
         user: nick_user,
         difficulty: chosen_difficulty,
         size: chosen_size,
-        avatar: selected_avatar,
+        avatar: avatar,
         location: geolocationSearch,
         date: Date.now()
     };

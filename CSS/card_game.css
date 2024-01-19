@@ -55,10 +55,10 @@ input{
   border-radius: 10%;
 }
 #container_song{
-  width: 50%;
-  display: grid;
-  justify-items: end;
   position: absolute;
+  width: 50%;
+  display: flex;
+  flex-direction: row-reverse;
 }
 #img_song{
   width: 3%;
@@ -156,7 +156,8 @@ input{
   margin: 0px;
   cursor: pointer;
 }
-#song{
-  width: 200vw;
-  background-image: url(../IMGs/necessary_images/play_audio.png);
+.styles_imgs{
+  cursor: pointer;
+  width: 2vw;
+  margin: 10px;
 }

@@ -52,20 +52,18 @@ main, header, footer{
 #avatar_imgs{
     background-color: rgba(0, 0, 0, 0.311);
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(4,1fr);
     grid-template-rows: repeat(2,1fr);
-    align-items: center;
     justify-content: center;
-    border-radius: 10px;
+    border-radius: 0 10px 10px 0;
     border: 1px solid black;
 }
 
 #avatar_select{
-    grid-column: 1;
-    grid-row: 1 / span 2;
-    width: 15vw;
+    width: 7vw;
     border: 1px solid black;
-    border-radius: 10px;
+    border-radius: 10px 0 0 10px ;
+    background-color: rgba(0, 0, 0, 0.311);
 }
 #error{
     color: red;
@@ -73,17 +71,21 @@ main, header, footer{
     margin-top: 5px;
 }
 #major_avatar{
-    width: 15vw;
+    width: 7vw;
+    height: 7vw;
 }
 
 /*CLASS*/
 .itemform{
     display: flex;
     flex-direction: column;
-    width: 20vw;
+    width: 10vw;
     padding: 10px;
 }
 
 .avatar{
-    width: 5vw;
+    width: 3vw;
+}
+.avatar_form{
+    display: flex;
 }

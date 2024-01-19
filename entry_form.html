@@ -21,8 +21,8 @@ Online store project for the MASTERMIND academy
     <main>
         <form action="card_game.html" id="formEntry">
             <div class="itemform">
-                <label for="nickname">Introduce tu Nick</label>
-                <input type="text" name="nickname" id="nick_name"  placeholder="Nick"  autocomplete="nickname" required minlength="4">
+                <label for="nick_name">Introduce tu Nick</label>
+                <input type="text" name="nick_name" id="nick_name"  placeholder="Nick"  autocomplete="nick_name" required minlength="4" maxlength="10">
                 <div>
                     <p id="error"></p>
                 </div>
@@ -44,13 +44,28 @@ Online store project for the MASTERMIND academy
                 </select>
             </div>
             <div class="avatar_form">
+                <div id="avatar_select" class="drop-Area" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <img id="major_avatar" src="./IMGs/avatar/gaara_avatar.png" alt="gaara_avatar" draggable="true" class="avatar">
+                </div>
                 <ul id="avatar_imgs">
-                    <li id="avatar_select"><img id="major_avatar" src="./IMGs/avatar/gaara_avatar.png" alt="gaara_avatar"></li>
-                    <li><img class="avatar" src="./IMGs/avatar/kakashi_avatar.png" alt="kakashi_avatar"></li>
-                    <li><img class="avatar" src="./IMGs/avatar/lee_avatar.png" alt="lee_avatar"></li>
-                    <li><img class="avatar" src="./IMGs/avatar/naruto_avatar.png" alt="naruto_avatar"></li>
-                    <li><img class="avatar" src="./IMGs/avatar/sakura_avatar.png" alt="sakura_avatar"></li>
-                    <li><img class="avatar" src="./IMGs/avatar/shikamaru_avatar.png" alt="shikamaru_avatar"></li>
+                    <li draggable="true" ondragstart="drag(event)" data-src="./IMGs/avatar/kakashi_avatar.png">
+                        <img src="./IMGs/avatar/kakashi_avatar.png" alt="kakashi_avatar" class="avatar">
+                    </li>
+                    <li draggable="true" ondragstart="drag(event)" data-src="./IMGs/avatar/lee_avatar.png">
+                        <img src="./IMGs/avatar/lee_avatar.png" alt="lee_avatar" class="avatar">
+                    </li>
+                    <li draggable="true" ondragstart="drag(event)" data-src="./IMGs/avatar/naruto_avatar.png">
+                        <img src="./IMGs/avatar/naruto_avatar.png" alt="naruto_avatar" class="avatar">
+                    </li>
+                    <li draggable="true" ondragstart="drag(event)" data-src="./IMGs/avatar/sakura_avatar.png">
+                        <img src="./IMGs/avatar/sakura_avatar.png" alt="sakura_avatar" class="avatar">
+                    </li>
+                    <li draggable="true" ondragstart="drag(event)" data-src="./IMGs/avatar/shikamaru_avatar.png">
+                        <img src="./IMGs/avatar/shikamaru_avatar.png" alt="shikamaru_avatar" class="avatar">
+                    </li>
+                    <li draggable="true" ondragstart="drag(event)" data-src="./IMGs/avatar/gaara_avatar.png">
+                        <img src="./IMGs/avatar/gaara_avatar.png" alt="shikamaru_avatar" class="avatar">
+                    </li>
                 </ul>
             </div>
             <div id="button" class="itemform">
