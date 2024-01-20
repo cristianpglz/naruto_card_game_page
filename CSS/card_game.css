@@ -135,6 +135,7 @@ input{
 .marker{
   width: 5vw;
   margin-top: 15px;
+  text-align: center;
 }
 .information{
   display: flex;

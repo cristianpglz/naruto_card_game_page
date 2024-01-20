@@ -27,12 +27,14 @@ Online store project for the MASTERMIND academy
         <div id="container_game">
             <div id="container_cards">
                 <ul id="all_the_cards">
-                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter"></li>
-                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter"></li>
-                    <li><img class="cards" src="./IMGs/game_characters/yamato.png" alt="back_of_a_letter"></li>
-                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter"></li>
-                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter"></li>
-                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter"></li>
+                    <!-- Cartas predefinidas -->
+                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter" onclick="flipCard(this)"></li>
+                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter" onclick="flipCard(this)"></li>
+                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter" onclick="flipCard(this)"></li>
+                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter" onclick="flipCard(this)"></li>
+                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter" onclick="flipCard(this)"></li>
+                    <li><img class="cards" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter" onclick="flipCard(this)"></li>
+
                 </ul>
             </div>
             <div id="container_marker">
@@ -46,12 +48,12 @@ Online store project for the MASTERMIND academy
                         <input class="marker" type="number" value="30" name="countdown"  id="countdown" readonly>
                     </div>
                     <div class="information">
-                        <label for="countdown">Puntos Obtenidos</label>
-                        <input class="marker" type="number" value="0" name="" id="" readonly>
+                        <label for="points">Puntos Obtenidos</label>
+                        <input class="marker" type="number" value="0" name="points" id="" readonly>
 
                     </div>
                     <div class="information">
-                        <label for="countdown">dificultad</label>
+                        <label for="set_difficulty">dificultad</label>
                         <input class="marker" type="text"  name="set_difficulty" id="set_difficulty" readonly>
 
                     </div>                        
