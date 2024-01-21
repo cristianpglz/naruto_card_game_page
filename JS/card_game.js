@@ -51,6 +51,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+  // Inicializar el juego de cartas
+  initializeCardGame();
+});
 
 function initializeCardGame(imagePaths) {
     // Seleccionar todas las imágenes en el contenedor
@@ -84,7 +87,7 @@ function initializeCardGame(imagePaths) {
 
 // Llama a la función para cargar las rutas de las imágenes y almacénalas en una variable
 cargarRutasDeImagenes('IMGs/game_characters')
-    this.addEventListener.then(imagePaths => {
+    .then(imagePaths => {
         // Aquí puedes usar el array 'imagePaths' como sea necesario en tu aplicación
         console.log(imagePaths);
 
