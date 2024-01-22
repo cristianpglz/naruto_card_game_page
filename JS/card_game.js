@@ -7,11 +7,12 @@ var button_pause;
 var nick_user;
 var idInterval;
 
+
 document.addEventListener("DOMContentLoaded", function () {
     const menu_song = document.getElementById("img_menu");
     const button_pause = document.getElementById("img_music");
     const song = document.getElementById("music");
-
+    song.volume = 0.10;
     // Cambiar la imagen y mutear/desmutear el audio al hacer clic en la imagen
     button_pause.addEventListener("click", function () {
         if (song.muted) {
@@ -50,112 +51,153 @@ document.addEventListener("DOMContentLoaded", function () {
             menu_song.setAttribute("src", "./IMGs/necessary_images/song_menu.png");
         }
     });
+})
 
-  // Inicializar el juego de cartas
-  initializeCardGame();
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const container = document.getElementById('all_the_cards');
+
+    cargarRutasDeImagenes('IMGs/game_characters')
+        .then(imagePaths => {
+            // Recupera el tamaño del localStorage
+            const chosenSize = sessionStorage.getItem('number_of_cards'); // valor predeterminado si no se encuentra en el localStorage
+            // Por ejemplo, podrías usar este array en la inicialización del juego
+            initializeCardGame(imagePaths, chosenSize);
+        })
+        .catch(error => {
+            console.error("Error al cargar rutas de imágenes:", error);
+        });
+
+    function cargarRutasDeImagenes(carpeta) {
+        const folderPath = `./${carpeta}/`;
+
+        return fetch(folderPath)
+            .then(response => response.text())
+            .then(html => {
+                const doc = new DOMParser().parseFromString(html, 'text/html');
+                const files = [...doc.querySelectorAll('a')].map(link => link.getAttribute('href'));
+
+                // Filtra solo las rutas de las imágenes
+                const imagePaths = files.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
+
+                // Agrega un punto al inicio de cada ruta
+                const pathsWithDot = imagePaths.map(path => `.${path}`);
+
+                return pathsWithDot;
+            })
+            .catch(error => {
+                console.error("Error al obtener la lista de imágenes:", error);
+                return []; // Devuelve un array vacío en caso de error
+            });
+    }
+
+    function initializeCardGame(imagePaths, chosenSize) {
+        // Calcular el tamaño del tablero según el número de cartas almacenado
+        let boardSize;
+        let totalCards;
+
+        if (chosenSize === "nine") {
+            boardSize = 3; // 3x3
+            totalCards = 9;
+        } else if (chosenSize === "sixteen") {
+            boardSize = 4; // 4x4
+            totalCards = 16;
+        } else if (chosenSize === "twenty-five") {
+            boardSize = 5; // 5x5
+            totalCards = 25;
+        } else {
+            console.error("Número de cartas no válido");
+            return;
+        }
+                // Modificar las columnas del contenedor all_the_cards
+            const allTheCardsContainer = document.getElementById('all_the_cards');
+            allTheCardsContainer.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`;
+
+            // Crear un array de elementos img
+            const cards = imagePaths.slice(0, totalCards).map((path, index) => {
+            const card = document.createElement('img');
+            card.classList.add("cards");
+            card.src = "./IMGs/necessary_images/back_of_a_letter.png"; // Imagen de respaldo por defecto
+            card.setAttribute("data-front-image", path);
+            card.addEventListener("click", function () {
+                flipCard(this);
+            });
+
+            return card;
+        });
+
+        // Barajar las cartas aleatoriamente
+        const shuffledCards = shuffleArray(cards);
+
+        // Limpiar el contenedor
+        container.innerHTML = '';
+
+        // Agregar las cartas al contenedor sin borrar el contenido anterior
+        for (let i = 0; i < totalCards; i++) {
+            const row = Math.floor(i / boardSize);
+            const col = i % boardSize;
+
+            // Configurar la ruta de la imagen de respaldo y el atributo data-front-image
+            shuffledCards[i].setAttribute("src", "./IMGs/necessary_images/back_of_a_letter.png");
+            shuffledCards[i].setAttribute("data-front-image", shuffledCards[i].getAttribute("data-front-image"));
+
+            // Crear el contenedor de la carta
+            const cardContainer = document.createElement("div");
+            cardContainer.classList.add("card-container");
+
+            // Agregar la carta al contenedor
+            cardContainer.appendChild(shuffledCards[i]);
+
+            if (col === 0) {
+                // Nueva fila
+                const rowContainer = document.createElement("div");
+                rowContainer.classList.add("row-container");
+                container.appendChild(rowContainer);
+            }
+
+            // Agregar el contenedor de la carta a la fila actual
+            container.lastChild.appendChild(cardContainer);
+        }
+    }
+
+    function shuffleArray(array) {
+        const shuffled = array.slice();
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    function flipCard(card) {
+        const currentSrc = card.src;
+        const frontImage = card.getAttribute("data-front-image");
+
+        // Verifica si la carta está boca abajo (es la imagen de respaldo)
+        if (currentSrc.includes("back_of_a_letter.png")) {
+            // Cambia la imagen a la parte frontal de la carta
+            card.src = frontImage;
+        } else {
+            // Cambia la imagen a la parte posterior de la carta
+            card.src = "./IMGs/necessary_images/back_of_a_letter.png"; // Ruta de la imagen de respaldo
+        }
+    }
 });
 
-function initializeCardGame(imagePaths) {
-    // Seleccionar todas las imágenes en el contenedor
-    const allImages = document.querySelectorAll('#container_cards img');
 
-    // Convertir la NodeList a un array
-    const imageArray = Array.from(allImages);
 
-    // Duplicar la lista para emparejar las cartas
-    const pairedImages = [...imageArray, ...imageArray];
-
-    // Barajar las cartas aleatoriamente
-    const shuffledCards = shuffleArray(pairedImages);
-
-    // Modificar los atributos src de las imágenes de las cartas
-    for (let i = 0; i < shuffledCards.length; i++) {
-        // Usa las rutas proporcionadas desde la función cargarRutasDeImagenes
-        const imagePath = i < imagePaths.length ? imagePaths[i] : "./IMGs/game_characters/back_of_a_letter.png";
-        shuffledCards[i].setAttribute("src", imagePath);
-        // Usa un atributo personalizado para almacenar la ruta de la imagen frontal
-        shuffledCards[i].setAttribute("data-front-image", imagePath);
-    }
-
-    // Agregar el evento de clic a todas las cartas con la clase 'cards'
-    shuffledCards.forEach(card => {
-        card.addEventListener("click", function () {
-            flipCard(this);
-        });
-    });
-}
-
-// Llama a la función para cargar las rutas de las imágenes y almacénalas en una variable
-cargarRutasDeImagenes('IMGs/game_characters')
-    .then(imagePaths => {
-        // Aquí puedes usar el array 'imagePaths' como sea necesario en tu aplicación
-        console.log(imagePaths);
-
-        // Por ejemplo, podrías usar este array en la inicialización del juego
-        initializeCardGame(imagePaths);
-    });
+    
+    
 
 
 
-// Función para cargar rutas de imágenes desde una carpeta
-function cargarRutasDeImagenes(carpeta) {
-    const folderPath = `./${carpeta}/`;
-
-    // Array con las rutas de las imágenes
-    const imagePaths = [
-        "./IMGs/game_characters/neji.png",
-        "./IMGs/game_characters/sakura.png",
-        "./IMGs/game_characters/sasuke.png",
-        "./IMGs/game_characters/shino.png",
-        "./IMGs/game_characters/shizune.png",
-        "./IMGs/game_characters/sikamaru.png",
-        "./IMGs/game_characters/temari.png",
-        "./IMGs/game_characters/yamato.png",
-        "./IMGs/game_characters/young_naruto.png",
-        "./IMGs/game_characters/anko.png",
-        "./IMGs/game_characters/choji.png",
-        "./IMGs/game_characters/dosu.png",
-        "./IMGs/game_characters/gaara.png",
-        "./IMGs/game_characters/gamatatsu.png",
-        "./IMGs/game_characters/hayate.png",
-        "./IMGs/game_characters/hinata.png",
-        "./IMGs/game_characters/ino.png",
-        "./IMGs/game_characters/iruka.png",
-        "./IMGs/game_characters/kakashi.png",
-        "./IMGs/game_characters/kankuro.png",
-        "./IMGs/game_characters/kiba.png",
-        "./IMGs/game_characters/kotetsu.png",
-        "./IMGs/game_characters/lee.png",
-        "./IMGs/game_characters/naruto.png"
-    ];
-
-    // Devuelve el array con las rutas de las imágenes
-    return Promise.resolve(imagePaths);
-}
 
 
-// Función para voltear la carta
-function flipCard(card) {
-    const currentSrc = card.getAttribute("src");
-
-    // Verifica si la carta está boca abajo (es la imagen de respaldo)
-    if (currentSrc.includes("back_of_a_letter.png")) {
-        // Cambia la imagen a la parte frontal de la carta
-        const frontImage = card.getAttribute("data-front-image"); // Usa un atributo personalizado
-        card.setAttribute("src", frontImage);
-    }
-}
 
 
-// Función para barajar un array
-function shuffleArray(array) {
-    const shuffled = array.slice();
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-}
+
 
 
 

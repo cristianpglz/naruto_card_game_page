@@ -73,7 +73,6 @@ input{
   display: grid;
   justify-content: center;
   grid-template-columns: repeat(3,1fr);
-  grid-template-rows: repeat(2,1fr);
 }
 
 #container_marker{
@@ -114,7 +113,7 @@ input{
 /*CLASS*/
 .cards{
   transition: 1s;
-  width: 10vw;
+  width: 5vw;
   margin: 2vw;
   border-radius: 10px;
   cursor: pointer;
@@ -153,8 +152,8 @@ input{
 }
 .cards:hover{
   transition: 1s;
-  width: 12vw;
-  margin: 0px;
+  width: 7vw;
+  margin: 0 0 1vw 0;
   cursor: pointer;
 }
 .styles_imgs{

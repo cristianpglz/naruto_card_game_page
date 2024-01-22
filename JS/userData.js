@@ -25,7 +25,6 @@ function Recover_data(){
 
 
 
-
 function get_Recover_data(){
     nick_user = sessionStorage.getItem('nick_name');
     chosen_difficulty = sessionStorage.getItem('set_difficulty');
