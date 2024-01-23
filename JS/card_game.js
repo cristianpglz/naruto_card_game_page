@@ -1,12 +1,14 @@
 
-
+//VARIABLES GENERALES
 var song;
 var cards;
 var menu_song;
 var button_pause;
 var nick_user;
 var idInterval;
+var points = 0; // Variable global para almacenar los puntos
 
+const difficulty = sessionStorage.getItem('set_difficulty');
 
 document.addEventListener("DOMContentLoaded", function () {
     const menu_song = document.getElementById("img_menu");
@@ -97,70 +99,92 @@ document.addEventListener("DOMContentLoaded", function () {
         // Calcular el tamaño del tablero según el número de cartas almacenado
         let boardSize;
         let totalCards;
-
+    
         if (chosenSize === "nine") {
             boardSize = 3; // 3x3
-            totalCards = 9;
+            totalCards = 8;
         } else if (chosenSize === "sixteen") {
             boardSize = 4; // 4x4
             totalCards = 16;
         } else if (chosenSize === "twenty-five") {
             boardSize = 5; // 5x5
-            totalCards = 25;
+            totalCards = 24;
         } else {
             console.error("Número de cartas no válido");
             return;
         }
-                // Modificar las columnas del contenedor all_the_cards
-            const allTheCardsContainer = document.getElementById('all_the_cards');
-            allTheCardsContainer.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`;
-
-            // Crear un array de elementos img
-            const cards = imagePaths.slice(0, totalCards).map((path, index) => {
-            const card = document.createElement('img');
-            card.classList.add("cards");
-            card.src = "./IMGs/necessary_images/back_of_a_letter.png"; // Imagen de respaldo por defecto
-            card.setAttribute("data-front-image", path);
-            card.addEventListener("click", function () {
+        
+        // Modificar las columnas del contenedor all_the_cards
+        const allTheCardsContainer = document.getElementById('all_the_cards');
+        allTheCardsContainer.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`;
+    
+        // Crear un array de elementos img
+        const cards = imagePaths.slice(0, totalCards / 2).flatMap((path, index) => {
+            const card1 = document.createElement('img');
+            card1.classList.add("cards");
+            card1.src = "./IMGs/necessary_images/back_of_a_letter.png"; // Imagen de respaldo por defecto
+            card1.setAttribute("data-front-image", path);
+            card1.addEventListener("click", function () {
                 flipCard(this);
             });
-
-            return card;
+    
+            const card2 = document.createElement('img');
+            card2.classList.add("cards");
+            card2.src = "./IMGs/necessary_images/back_of_a_letter.png"; // Imagen de respaldo por defecto
+            card2.setAttribute("data-front-image", path);
+            card2.addEventListener("click", function () {
+                flipCard(this);
+            });
+    
+            return [card1, card2];
         });
-
+    
         // Barajar las cartas aleatoriamente
         const shuffledCards = shuffleArray(cards);
-
+    
         // Limpiar el contenedor
-        container.innerHTML = '';
-
+        allTheCardsContainer.innerHTML = '';
+    
         // Agregar las cartas al contenedor sin borrar el contenido anterior
         for (let i = 0; i < totalCards; i++) {
             const row = Math.floor(i / boardSize);
             const col = i % boardSize;
-
+    
             // Configurar la ruta de la imagen de respaldo y el atributo data-front-image
             shuffledCards[i].setAttribute("src", "./IMGs/necessary_images/back_of_a_letter.png");
             shuffledCards[i].setAttribute("data-front-image", shuffledCards[i].getAttribute("data-front-image"));
-
+    
+            // Inicialmente, todas las cartas son visibles
+            shuffledCards[i].style.visibility = "visible";
+    
             // Crear el contenedor de la carta
             const cardContainer = document.createElement("div");
             cardContainer.classList.add("card-container");
-
+    
             // Agregar la carta al contenedor
             cardContainer.appendChild(shuffledCards[i]);
-
+    
             if (col === 0) {
                 // Nueva fila
                 const rowContainer = document.createElement("div");
                 rowContainer.classList.add("row-container");
-                container.appendChild(rowContainer);
+                allTheCardsContainer.appendChild(rowContainer);
             }
-
+    
             // Agregar el contenedor de la carta a la fila actual
-            container.lastChild.appendChild(cardContainer);
+            allTheCardsContainer.lastChild.appendChild(cardContainer);
         }
+    
+        // Añade la sección de información al final del script
+        const informationSection = document.createElement("div");
+        informationSection.classList.add("information");
+        informationSection.innerHTML = `
+            <label for="points">Puntos Obtenidos</label>
+            <input class="marker" type="number" value="${points}" name="points" id="" readonly>
+        `;
+        document.body.appendChild(informationSection);
     }
+    
 
     function shuffleArray(array) {
         const shuffled = array.slice();
@@ -171,89 +195,239 @@ document.addEventListener("DOMContentLoaded", function () {
         return shuffled;
     }
 
+    let flippedCards = [];
+    function setTime(difficulty) {
+        switch (difficulty) {
+            case "easy":
+                timeFlip = 4000; // 4 segundos
+                countdown_rest = 60; // 60 segundos para easy
+                break;
+            case "half":
+                timeFlip = 3000; // 3 segundos
+                countdown_rest = 50;
+                break;
+            case "difficult":
+                timeFlip = 2000; // 2 segundos
+                countdown_rest = 40;
+                break;
+            default:
+                timeFlip = 4000; // Valor predeterminado, 1 segundo
+                countdown_rest = 60; // 60 segundos para easy
+
+        }
+    }
+    
     function flipCard(card) {
+        setTime(difficulty);
         const currentSrc = card.src;
         const frontImage = card.getAttribute("data-front-image");
 
         // Verifica si la carta está boca abajo (es la imagen de respaldo)
         if (currentSrc.includes("back_of_a_letter.png")) {
-            // Cambia la imagen a la parte frontal de la carta
-            card.src = frontImage;
-        } else {
-            // Cambia la imagen a la parte posterior de la carta
-            card.src = "./IMGs/necessary_images/back_of_a_letter.png"; // Ruta de la imagen de respaldo
+            // Aplica la rotación manualmente usando la clase flipped
+            card.classList.add("flipped");
+
+            // Espera un breve período antes de cambiar la imagen
+            setTimeout(() => {
+                // Cambia la imagen a la parte frontal de la carta
+                card.src = frontImage;
+
+                // Verifica si hay dos cartas levantadas
+                if (flippedCards.length === 1) {
+                    const previousCard = flippedCards[0];
+
+                    // Verifica si las dos cartas levantadas son iguales
+                    if (previousCard.getAttribute("data-front-image") === frontImage) {
+                        // Cartas iguales, realiza alguna animación o mensaje
+                        setTimeout(() => {
+                            // Puedes agregar alguna animación o mensaje aquí
+                            alert("¡Encontraste una pareja!");
+
+                            // Incrementa los puntos según la dificultad
+                            let pointsIncrement;
+                            switch (difficulty) {
+                                case "easy":
+                                    pointsIncrement = 5;
+                                    break;
+                                case "half":
+                                    pointsIncrement = 7;
+                                    break;
+                                case "difficult":
+                                    pointsIncrement = 10;
+                                    break;
+                                default:
+                                    pointsIncrement = 5;
+                            }
+
+                            // Incrementa los puntos y actualiza el marcador
+                            points += pointsIncrement;
+                            updatePointsMarker();
+
+                        }, 500); // Ajusta el tiempo según sea necesario
+
+                        // Limpia la lista de cartas dadas vuelta
+                        flippedCards = [];
+                    } else {
+                        // Cartas diferentes, espera un breve período y voltea ambas
+                        setTimeout(() => {
+                            // Voltea ambas cartas
+                            card.src = "./IMGs/necessary_images/back_of_a_letter.png";
+                            previousCard.src = "./IMGs/necessary_images/back_of_a_letter.png";
+                            card.classList.remove("flipped");
+                            previousCard.classList.remove("flipped");
+                            // Puedes agregar alguna animación o mensaje aquí
+                        }, 500); // Ajusta el tiempo según sea necesario
+
+                        // Limpia la lista de cartas dadas vuelta
+                        flippedCards = [];
+                    }
+                } else {
+                    // No hay otras cartas levantadas, simplemente agrega la actual a la lista
+                    flippedCards.push(card);
+                }
+            }, 300); // Ajusta el tiempo según sea necesario
         }
     }
-});
 
-
-
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function iformation_user() {
-    // Obtén el nombre de usuario del almacenamiento local
-    var user = sessionStorage.getItem('nick_name');
-    var game_user = document.getElementById('nick_name');
-
-    if (user && game_user) {
-        // Si hay un nombre de usuario en el almacenamiento local y se encuentra el elemento del juego
-        if (game_user.value !== user) {
-            // Si hay una diferencia, actualiza el valor del elemento del juego con el valor del almacenamiento local
-            game_user.value = user;
-        } else {
-            console.error("User is the same.");
+        // Función para actualizar los puntos en el marcador
+    function updatePointsMarker() {
+        const pointsMarker = document.getElementById("points");
+        if (pointsMarker) {
+            pointsMarker.value = points;
+            console.log(points);
         }
-    } else {
-        console.error("User or game_user element not found.");
+    }
+    
+    
+    
+}
+)
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const startButton = document.getElementById("start-button");
+    const overlay = document.getElementById("overlay");
+
+    startButton.addEventListener("click", function () {
+        hideStartScreen();
+        startGame();
+    });
+
+    function hideStartScreen() {
+        overlay.style.display = "none";
     }
 
-    // Verifica si existe el elemento major_avatar
-    var majorAvatar = document.getElementById('major_avatar');
-    if (majorAvatar) {
-        // Asigna la fuente del avatar o una cadena vacía si no hay fuente
-        majorAvatar.src = avatar || "";
-    } else {
-        console.error("Major Avatar element not found.");
+    function showStartScreen() {
+        overlay.style.display = "flex";
     }
-}
-function rest_time() {
-    let countdownElement = document.getElementById("countdown");
-    let countdown_rest = parseInt(countdownElement.value) - 1;
-
-    countdownElement.value = countdown_rest;
-
-    if (countdown_rest === 0) {
-        clearInterval(idInterval);
-        console.log("¡Contador ha llegado a cero!");
+    function iformation_user() {
+        // Obtén el nombre de usuario del almacenamiento local
+        var user = sessionStorage.getItem('nick_name');
+        var game_user = document.getElementById('nick_name');
+    
+        if (user && game_user) {
+            // Si hay un nombre de usuario en el almacenamiento local y se encuentra el elemento del juego
+            if (game_user.value !== user) {
+                // Si hay una diferencia, actualiza el valor del elemento del juego con el valor del almacenamiento local
+                game_user.value = user;
+            } else {
+                console.error("User is the same.");
+            }
+        } else {
+            console.error("User or game_user element not found.");
+        }
+    
+        // Verifica si existe el elemento major_avatar
+        var majorAvatar = document.getElementById('major_avatar');
+        if (majorAvatar) {
+            // Asigna la fuente del avatar o una cadena vacía si no hay fuente
+            majorAvatar.src = avatar || "";
+        } else {
+            console.error("Major Avatar element not found.");
+        }
     }
-}
+    function startGame(difficulty) {
+        let countdownElement = document.getElementById("countdown");
+        let countdown_rest;
+    
+        // Configurar la dificultad una sola vez
+        switch (difficulty) {
+            case "easy":
+                countdown_rest = 60; // 60 segundos para easy
+                break;
+            case "half":
+                countdown_rest = 50;
+                break;
+            case "difficult":
+                countdown_rest = 40;
+                break;
+            default:
+                countdown_rest = 60; // 60 segundos para easy
+        }
+    
+        countdownElement.value = countdown_rest;
+    
+        function rest_time() {
+            let idInterval = setInterval(function () {
+                countdown_rest--;
+    
+                countdownElement.value = countdown_rest;
+    
+                console.log(countdown_rest);
+    
+                if (countdown_rest <= 0) {
+                    clearInterval(idInterval);
+                    console.log("¡Contador ha llegado a cero!");
+                    // Puedes llamar a una función aquí si necesitas realizar alguna acción cuando el contador llega a cero
+                }
+            }, 1000);
+        }
+    
+        function game_events() {
+            // Reiniciar el temporizador
+            let timerReachedZero = false;
+    
+            // Ejecutar el temporizador y verificar si llegó a cero
+            let idInterval = setInterval(function() {
+                timerReachedZero = rest_time();
+    
+                if (timerReachedZero) {
+                    // Realizar acciones adicionales si el temporizador llegó a cero
+                    console.log("Realizar acciones adicionales aquí");
+    
+                    // Detener el intervalo
+                    clearInterval(idInterval);
+                }
+            }, 2000);
+        }
+    
+        // Llamar a la función game_events con la dificultad
+        game_events();
+    }
+})
 
-function game_events() {
-    idInterval = setInterval(rest_time, 1000);
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 console.log("Calling get_Recover_data");
@@ -266,5 +440,6 @@ if (!checkUserData()) {
     console.log("Redirecting to entry_form.html");
     location = "entry_form.html";
 }
-iformation_user()
-game_events();
+document.addEventListener("DOMContentLoaded", function () {
+    showStartScreen();
+});
