@@ -44,22 +44,81 @@ input{
 
 /*IDs*/
 #overlay {
-  position: fixed;
+  position:absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
-  display: none;
+  background: rgba(0, 0, 0, 0.39); /* Fondo semitransparente */
+  z-index: 3; /* Z-index mayor que el del juego */
+  border-radius: 10%;
+  display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2; /* Z-index mayor que el del juego */
+  z-index: 3;
 }
 #start-screen {
-  background: #fff; /* Fondo blanco */
-  padding: 20px;
-  text-align: center;
+  position: absolute;;
+  z-index: 3;
 }
+#start-button{
+  cursor: pointer;
+  transition: 1s;
+  font-size:2vw;
+  color: rgb(239, 122, 27);
+}
+#start-button:hover{
+  transition: 1s;
+  font-size: 3vw;
+}
+#game-over-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#game-over-screen {
+  position: absolute;
+  z-index: 2;
+  text-align: center;
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+}
+
+#game-over-screen h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+#game-over-message {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+#restart-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+#restart-button:hover {
+  background-color: #45a049;
+}
+
 #container_game{
   position: relative;
   z-index: 1; /* Z-index inferior al de la pantalla de inicio */
