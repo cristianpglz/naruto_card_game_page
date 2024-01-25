@@ -45,8 +45,7 @@ input{
 /*IDs*/
 #overlay {
   position:absolute;
-  top: 0;
-  left: 0;
+
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.39); /* Fondo semitransparente */
@@ -69,8 +68,9 @@ input{
 }
 #start-button:hover{
   transition: 1s;
-  font-size: 3vw;
+  transform: scale(2, 2);
 }
+
 #game-over-overlay {
   position: absolute;
   top: 0;
@@ -85,6 +85,7 @@ input{
 }
 
 #game-over-screen {
+  visibility: hidden;
   position: absolute;
   z-index: 2;
   text-align: center;
@@ -95,12 +96,13 @@ input{
 }
 
 #game-over-screen h1 {
-  font-size: 2em;
+  font-size: 2vw;
   margin-bottom: 10px;
+  z-index: 0;
 }
 
 #game-over-message {
-  font-size: 1.2em;
+  font-size: 1.2vw;
   margin-bottom: 20px;
 }
 
@@ -112,7 +114,7 @@ input{
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  z-index: 1;
+  z-index: 0;
 }
 
 #restart-button:hover {
@@ -121,7 +123,7 @@ input{
 
 #container_game{
   position: relative;
-  z-index: 1; /* Z-index inferior al de la pantalla de inicio */
+  z-index: 2; /* Z-index inferior al de la pantalla de inicio */
   padding: 1vw;
   display: grid;
   justify-content: center;
@@ -196,7 +198,6 @@ input{
   margin: 2vw;
   border-radius: 10px;
   cursor: pointer;
-  transform: 0.5s cubic-bezier(0.4, 2.8, 0.5, 1.2);
 }
 
 .skills_button{
@@ -236,25 +237,20 @@ input{
   width: 2vw;
   margin: 10px;
 }
+.cards:hover{
+  transition: 1s;
+  transform: scale(1.5, 1.5);
+  cursor: pointer;
+}
 .flipped {
     transform: rotateY(180deg);
     transform: 0.5s ease; /* Puedes ajustar la duración y el tipo de transición según sea necesario */
     transition: 1;
-    width: 5vw;
-    margin: 2vw;
+
 }
 .flipped:hover{
-  transform: rotateY(180deg);
+  transform: rotateY(180deg) scale(1.5, 1.5);
   transition: transform 0.5s ease; /* Puedes ajustar la duración y el tipo de transición según sea necesario */
-  transition: 1s;
-  width: 7vw;
-  margin: 0 0 1vw 0;
-  cursor: pointer;
-}
-.cards:hover{
-  transition: 1s;
-  width: 7vw;
-  margin: 0 0 1vw 0;
   cursor: pointer;
 }
 

@@ -363,11 +363,11 @@ document.addEventListener("DOMContentLoaded", function () {
         
             console.log(countdown_rest);
         
-            if (countdown_rest <= 0) {
+            if (countdown_rest === 0) {
                 console.log("¡Contador ha llegado a cero!");
+                countdownElement = 0;
                 return true; // Indica que el temporizador ha llegado a cero
             }
-        
             return false; // Indica que el temporizador aún no ha llegado a cero
         }
         
@@ -398,6 +398,8 @@ document.addEventListener("DOMContentLoaded", function () {
         
 
         function game_events() {
+            const gameOverOverlay = document.getElementById("game-over-overlay");
+            const gameOverScreen = document.getElementById("game-over-screen");
             // Reiniciar el temporizador
             let timerReachedZero = false;
         
@@ -410,7 +412,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.log("Realizar acciones adicionales aquí");
         
                     // Mostrar la pantalla de "game over" solo si no se ha mostrado antes
-                    if (!gameOverScreen.hidden) {
+                    if (gameOverScreen.hidden) {
+                        console.log("estoy aqui");
                         gameOverOverlay.hidden = false;
                         gameOverScreen.hidden = false;
         
@@ -434,7 +437,8 @@ const restartButton = document.getElementById("restart-button");
 
 restartButton.addEventListener("click", function () {
     hideGameOverScreen();
-    startGame("easy");
+    showGameOverScreen();
+    startGame(difficulty);
 })}})
 
 console.log("Calling get_Recover_data");
