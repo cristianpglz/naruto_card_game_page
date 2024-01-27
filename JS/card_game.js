@@ -8,9 +8,8 @@ var idInterval;
 var points = 0;
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Lógica relacionada con el inicio del juego...
-
-    const difficulty = sessionStorage.getItem('set_difficulty');
+    const difficulty = localStorage.getItem('difficulty');    
+    console.log(difficulty);
     const menu_song = document.getElementById("img_menu");
     const button_pause = document.getElementById("img_music");
     const song = document.getElementById("music");
@@ -203,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function flipCard(card) {
+    function flipCard(card, difficulty) {
         setTime(difficulty);
         const currentSrc = card.src;
         const frontImage = card.getAttribute("data-front-image");
@@ -221,35 +220,57 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Verifica si hay dos cartas levantadas
                 if (flippedCards.length === 1) {
                     const previousCard = flippedCards[0];
-
+                
                     // Verifica si las dos cartas levantadas son iguales
                     if (previousCard.getAttribute("data-front-image") === frontImage) {
                         // Cartas iguales, realiza alguna animación o mensaje
-                        setTimeout(() => {
-                            // Puedes agregar alguna animación o mensaje aquí
-                            alert("¡Encontraste una pareja!");
-
+                        setTimeout((difficulty) => {
+                            const alertPointsElement = document.getElementById("alert_points");
+                            const gifAlertElement = document.getElementsByClassName("points_aler");
+                
                             // Incrementa los puntos según la dificultad
                             let pointsIncrement;
+                            let gifPath;
+                            console.log(difficulty);
                             switch (difficulty) {
                                 case "easy":
                                     pointsIncrement = 5;
+                                    gifPath = "./GIFTs/5_points.gif";
                                     break;
                                 case "half":
                                     pointsIncrement = 7;
+                                    gifPath = "./GIFTs/7_points.gif";
                                     break;
                                 case "difficult":
                                     pointsIncrement = 10;
+                                    gifPath = "./GIFTs/10_points.gif";
                                     break;
                                 default:
                                     pointsIncrement = 5;
+                                    gifPath = "./GIFTs/5_points.gif";
                             }
-
+                
+                            // Cambia el src de la imagen
+                            gifAlertElement.src = gifPath;
+                
+                            // Hacer visible el elemento
+                            alertPointsElement.style.visibility = "visible";
+                
+                            // Agrega un temporizador para ocultar el elemento después de cierto tiempo (por ejemplo, 3 segundos)
+                            setTimeout(() => {
+                                alertPointsElement.style.visibility = "hidden";
+                            }, 3000);
+                         // Añadí un retraso de 1 segundo para simular la espera de la animación, puedes ajustarlo según tus necesidades
+            
+                
+                        // Llama a la función con la dificultad deseada
+                            
                             // Incrementa los puntos y actualiza el marcador
                             points += pointsIncrement;
                             updatePointsMarker();
 
-                        }, 500); // Ajusta el tiempo según sea necesario
+                    }, 500); 
+                    // Ajusta el tiempo según sea necesario
 
                         // Limpia la lista de cartas dadas vuelta
                         flippedCards = [];

@@ -43,6 +43,17 @@ input{
 }
 
 /*IDs*/
+#alert_points{
+  position:absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+}
 #overlay {
   position:absolute;
 
@@ -191,6 +202,10 @@ input{
 }
 
 /*CLASS*/
+.points_alert{
+  width: 40%;
+  animation: pulse 1s infinite; /* 1s de duración, repetición infinita */
+}
 .cards {
   transform-style: preserve-3d;
   transition: 1s;
@@ -254,3 +269,17 @@ input{
   cursor: pointer;
 }
 
+
+
+@keyframes pulse {
+  0% {
+    transition: 1s;
+    transform: scale(1); /* Escala normal al inicio */
+  }
+  50% {
+    transform: scale(1.4); /* Escala aumentada a la mitad de la animación */
+  }
+  100% {
+    transform: scale(1); /* Vuelve a la escala normal al final */
+  }
+}
