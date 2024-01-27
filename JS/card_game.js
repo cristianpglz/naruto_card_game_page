@@ -401,10 +401,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }, 2000);
         }
-    
+        startGame();
         // Llamar a la función game_events con la dificultad
-        game_events();
+        
     }
+    iformation_user();
+    game_events();
 })
 
 
