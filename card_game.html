@@ -24,12 +24,20 @@ Online store project for the MASTERMIND academy
         <img id="logo" src="./IMGs/necessary_images/png-konoha.png" alt="image main logo" width="300">
     </header>
     <main>
-        <div id="overlay" class="overlay">
-            <div id="start-screen" class="start-screen">
-                <button id="start-button">Comenzar juego</button>
-            </div>
-        </div>
         <div id="container_game"  data-chosen-size="3x3">
+            <div id="overlay" class="overlay">
+                <div id="start-screen" class="start-screen">
+                    <p id="start-button" type="button">Comenzar juego</p>
+                </div>
+            </div>
+            <div id="game-over-screen" class="overlay">
+                <h1>Juego Terminado</h1>
+                <p id="game-over-message"></p>
+                <button id="restart-button">Reiniciar</button>
+            </div>
+            <div id="alert_points">
+                <img class="points_alert" src="/GIFTs/5_points.gif" alt="">
+            </div>      
             <div id="container_cards">
                 <ul id="all_the_cards">
                     <!-- Cartas predefinidas -->
@@ -53,7 +61,7 @@ Online store project for the MASTERMIND academy
                     </div>
                     <div class="information">
                         <label for="countdown">Tiempo Restante</label>
-                        <input class="marker" type="number" value="0" name="countdown"  id="countdown" readonly>
+                        <input class="marker" type="number" value="" name="countdown"  id="countdown" readonly>
                     </div>
                     <div class="information">
                         <label for="points">Puntos Obtenidos</label>
@@ -79,6 +87,5 @@ Online store project for the MASTERMIND academy
     </footer>
     <script src="./JS/userData.js"></script>
     <script src="./JS/card_game.js"></script>
-
 </body>
 </html>

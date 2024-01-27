@@ -43,26 +43,98 @@ input{
 }
 
 /*IDs*/
+#alert_points{
+  position:absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+}
 #overlay {
-  position: fixed;
+  position:absolute;
+
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.39); /* Fondo semitransparente */
+  z-index: 3; /* Z-index mayor que el del juego */
+  border-radius: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+}
+#start-screen {
+  position: absolute;;
+  z-index: 3;
+}
+#start-button{
+  cursor: pointer;
+  transition: 1s;
+  font-size:2vw;
+  color: rgb(239, 122, 27);
+}
+#start-button:hover{
+  transition: 1s;
+  transform: scale(2, 2);
+}
+
+#game-over-overlay {
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
-  display: none;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2;
+  display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2; /* Z-index mayor que el del juego */
 }
-#start-screen {
-  background: #fff; /* Fondo blanco */
-  padding: 20px;
+
+#game-over-screen {
+  visibility: hidden;
+  position: absolute;
+  z-index: 2;
   text-align: center;
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
 }
+
+#game-over-screen h1 {
+  font-size: 2vw;
+  margin-bottom: 10px;
+  z-index: 0;
+}
+
+#game-over-message {
+  font-size: 1.2vw;
+  margin-bottom: 20px;
+}
+
+#restart-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 0;
+}
+
+#restart-button:hover {
+  background-color: #45a049;
+}
+
 #container_game{
   position: relative;
-  z-index: 1; /* Z-index inferior al de la pantalla de inicio */
+  z-index: 2; /* Z-index inferior al de la pantalla de inicio */
   padding: 1vw;
   display: grid;
   justify-content: center;
@@ -130,6 +202,10 @@ input{
 }
 
 /*CLASS*/
+.points_alert{
+  width: 40%;
+  animation: pulse 1s infinite; /* 1s de duración, repetición infinita */
+}
 .cards {
   transform-style: preserve-3d;
   transition: 1s;
@@ -137,7 +213,6 @@ input{
   margin: 2vw;
   border-radius: 10px;
   cursor: pointer;
-  transform: 0.5s cubic-bezier(0.4, 2.8, 0.5, 1.2);
 }
 
 .skills_button{
@@ -177,25 +252,34 @@ input{
   width: 2vw;
   margin: 10px;
 }
+.cards:hover{
+  transition: 1s;
+  transform: scale(1.5, 1.5);
+  cursor: pointer;
+}
 .flipped {
     transform: rotateY(180deg);
     transform: 0.5s ease; /* Puedes ajustar la duración y el tipo de transición según sea necesario */
     transition: 1;
-    width: 5vw;
-    margin: 2vw;
+
 }
 .flipped:hover{
-  transform: rotateY(180deg);
+  transform: rotateY(180deg) scale(1.5, 1.5);
   transition: transform 0.5s ease; /* Puedes ajustar la duración y el tipo de transición según sea necesario */
-  transition: 1s;
-  width: 7vw;
-  margin: 0 0 1vw 0;
-  cursor: pointer;
-}
-.cards:hover{
-  transition: 1s;
-  width: 7vw;
-  margin: 0 0 1vw 0;
   cursor: pointer;
 }
 
+
+
+@keyframes pulse {
+  0% {
+    transition: 1s;
+    transform: scale(1); /* Escala normal al inicio */
+  }
+  50% {
+    transform: scale(1.4); /* Escala aumentada a la mitad de la animación */
+  }
+  100% {
+    transform: scale(1); /* Vuelve a la escala normal al final */
+  }
+}
