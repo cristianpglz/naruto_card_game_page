@@ -8,8 +8,12 @@ var idInterval;
 var points = 0;
 
 document.addEventListener("DOMContentLoaded", function () {
-    const difficulty = localStorage.getItem('difficulty');    
-    console.log(difficulty);
+    // Obtener el historial del localStorage
+    const historyFromLocalStorage = localStorage.getItem('history');
+    // Convertir la cadena JSON a un array de objetos
+    const historyArray = JSON.parse(historyFromLocalStorage);
+    // Verificar si hay algún elemento en el historial y obtener el valor de 'difficulty'
+    const difficulty = historyArray.length > 0 ? historyArray[0].difficulty : 'easy';    
     const menu_song = document.getElementById("img_menu");
     const button_pause = document.getElementById("img_music");
     const song = document.getElementById("music");
@@ -181,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     let flippedCards = [];
-    function setTime(difficulty) {
+    function setTime() {
         switch (difficulty) {
             case "easy":
                 timeFlip = 4000; // 4 segundos
@@ -202,7 +206,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function flipCard(card, difficulty) {
+    function flipCard(card) {
         setTime(difficulty);
         const currentSrc = card.src;
         const frontImage = card.getAttribute("data-front-image");
@@ -224,10 +228,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Verifica si las dos cartas levantadas son iguales
                     if (previousCard.getAttribute("data-front-image") === frontImage) {
                         // Cartas iguales, realiza alguna animación o mensaje
-                        setTimeout((difficulty) => {
+                        setTimeout(() => {
                             const alertPointsElement = document.getElementById("alert_points");
-                            const gifAlertElement = document.getElementsByClassName("points_aler");
-                
+                            const gifAlertElement = document.getElementById("points_alert");
+                            console.log(gifAlertElement.src);
                             // Incrementa los puntos según la dificultad
                             let pointsIncrement;
                             let gifPath;
@@ -352,10 +356,14 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             console.error("Major Avatar element not found.");
         }
+
+        var status_difficulty= document.getElementById("set_difficulty");
+        status_difficulty.value = difficulty;
+
     }    
     information_user(); // Llamada a la función corregida
 
-    function startGame(difficulty) {
+    function startGame() {
         let countdownElement = document.getElementById("countdown");
         let countdown_rest;
 
@@ -459,7 +467,7 @@ const restartButton = document.getElementById("restart-button");
 restartButton.addEventListener("click", function () {
     hideGameOverScreen();
     showGameOverScreen();
-    startGame(difficulty);
+    startGame();
 })}})
 
 console.log("Calling get_Recover_data");

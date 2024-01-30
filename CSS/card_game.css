@@ -4,14 +4,13 @@ body{
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
-  width: 60%;
-  height: 60%;
+  width: 50%;
+  height: 50%;
   padding-left: 20%;
   padding-right: 20%;
 }
 /* Works on Firefox */
 * {
-    scrollbar-width:thin;
     scrollbar-color: rgb(239,121,27);
   }
   
@@ -29,7 +28,6 @@ body{
     border-radius: 10px;
   }
 main, header, footer{
-  padding: 1vw;
   display: grid;
   justify-content: center;
   text-align: center;
@@ -53,6 +51,10 @@ input{
   justify-content: center;
   align-items: center;
   visibility: hidden;
+}
+footer{
+  padding: 1%;
+  border-radius: 0 0 20px 20px;
 }
 #overlay {
   position:absolute;
@@ -146,7 +148,7 @@ input{
   border-radius: 10%;
 }
 #container_song{
-  position: absolute;
+  position:fixed;
   width: 50%;
   display: flex;
   flex-direction: row-reverse;
@@ -200,12 +202,12 @@ input{
   align-items: center;
   justify-content: end;
 }
-
-/*CLASS*/
-.points_alert{
+#points_alert{
   width: 40%;
   animation: pulse 1s infinite; /* 1s de duración, repetición infinita */
 }
+
+/*CLASS*/
 .cards {
   transform-style: preserve-3d;
   transition: 1s;
