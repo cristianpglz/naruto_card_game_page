@@ -210,106 +210,111 @@ document.addEventListener("DOMContentLoaded", function () {
         setTime(difficulty);
         const currentSrc = card.src;
         const frontImage = card.getAttribute("data-front-image");
-
         // Verifica si la carta está boca abajo (es la imagen de respaldo)
         if (currentSrc.includes("back_of_a_letter.png")) {
             // Aplica la rotación manualmente usando la clase flipped
             card.classList.add("flipped");
-
+    
             // Espera un breve período antes de cambiar la imagen
             setTimeout(() => {
                 // Cambia la imagen a la parte frontal de la carta
                 card.src = frontImage;
-
-                // Verifica si hay dos cartas levantadas
-                if (flippedCards.length === 1) {
-                    const previousCard = flippedCards[0];
-                
-                    // Verifica si las dos cartas levantadas son iguales
-                    if (previousCard.getAttribute("data-front-image") === frontImage) {
-                        // Cartas iguales, realiza alguna animación o mensaje
-                        setTimeout(() => {
-                            const alertPointsElement = document.getElementById("alert_points");
-                            const gifAlertElement = document.getElementById("points_alert");
-                            console.log(gifAlertElement.src);
-                            // Incrementa los puntos según la dificultad
-                            let pointsIncrement;
-                            let gifPath;
-                            console.log(difficulty);
-                            switch (difficulty) {
-                                case "easy":
-                                    pointsIncrement = 5;
-                                    gifPath = "./GIFTs/5_points.gif";
-                                    break;
-                                case "half":
-                                    pointsIncrement = 7;
-                                    gifPath = "./GIFTs/7_points.gif";
-                                    break;
-                                case "difficult":
-                                    pointsIncrement = 10;
-                                    gifPath = "./GIFTs/10_points.gif";
-                                    break;
-                                default:
-                                    pointsIncrement = 5;
-                                    gifPath = "./GIFTs/5_points.gif";
-                            }
-                
-                            // Cambia el src de la imagen
-                            gifAlertElement.src = gifPath;
-                
-                            // Hacer visible el elemento
-                            alertPointsElement.style.visibility = "visible";
-                
-                            // Agrega un temporizador para ocultar el elemento después de cierto tiempo (por ejemplo, 3 segundos)
-                            setTimeout(() => {
-                                alertPointsElement.style.visibility = "hidden";
-                            }, 3000);
-                         // Añadí un retraso de 1 segundo para simular la espera de la animación, puedes ajustarlo según tus necesidades
-            
-                
-                        // Llama a la función con la dificultad deseada
-                            
-                            // Incrementa los puntos y actualiza el marcador
-                            points += pointsIncrement;
-                            updatePointsMarker();
-
-                    }, 500); 
-                    // Ajusta el tiempo según sea necesario
-
-                        // Limpia la lista de cartas dadas vuelta
-                        flippedCards = [];
-                    } else {
-
-                        // Cartas diferentes, espera un breve período y voltea ambas
-                        setTimeout(() => {
-                            // Voltea ambas cartas
-                            card.src = "./IMGs/necessary_images/back_of_a_letter.png";
-                            previousCard.src = "./IMGs/necessary_images/back_of_a_letter.png";
-                            card.classList.remove("flipped");
-                            previousCard.classList.remove("flipped");
-                            // Puedes agregar alguna animación o mensaje aquí
-                        }, 500); // Ajusta el tiempo según sea necesario
-
-                        // Limpia la lista de cartas dadas vuelta
-                        flippedCards = [];
-                    }
-                }
-                 else {
-                    // Cartas diferentes, espera un breve período y voltea ambas
+    
+                // Agrega la carta a la lista de cartas levantadas
+                flippedCards.push(card);
+    
+                // Verifica si ya hay dos cartas levantadas
+                if (flippedCards.length === 2) {
+                    // Realiza la comprobación después de un tiempo de espera
                     setTimeout(() => {
-                        // Voltea ambas cartas
-                        card.src = "./IMGs/necessary_images/back_of_a_letter.png";
-                        previousCard.src = "./IMGs/necessary_images/back_of_a_letter.png";
-                        card.classList.remove("flipped");
-                        previousCard.classList.remove("flipped");
-                        // Puedes agregar alguna animación o mensaje aquí
-                    }, timeFlip); // Ajusta el tiempo según sea necesario
-                    // No hay otras cartas levantadas, simplemente agrega la actual a la lista
+                        // Verifica si las dos cartas levantadas son iguales
+                        if (flippedCards[0].getAttribute("data-front-image") === flippedCards[1].getAttribute("data-front-image")) {
+                            // Cartas iguales, realiza alguna animación o mensaje
+                            handleEqualCards();
+                        } else {
+                            if (flippedCards[0].getAttribute("data-front-image") === flippedCards[1].getAttribute("data-front-image")) {
+                                // Cartas iguales, realiza alguna animación o mensaje
+                                handleEqualCards();
+                            }
+                            else{
+                                // Cartas diferentes, voltea ambas cartas después de un tiempo de espera
+                                handleDifferentCards();
+                            }
+                        }
+                    }, timeFlip); // Ajusta el tiempo antes de que se active la condición else
+                } else if (flippedCards.length === 3) {
+                    // Si ya hay tres cartas levantadas, voltea las dos anteriores
+                    handleDifferentCards();
+                    // Agrega la carta actual a la lista de cartas levantadas
                     flippedCards.push(card);
                 }
-            }, 300); // Ajusta el tiempo según sea necesario
+            }, 250); // Ajusta el tiempo antes de que se active la condición else if
         }
     }
+    
+    function handleEqualCards() {
+        // Cartas iguales, realiza alguna animación o mensaje
+        setTimeout(() => {
+            // Incrementa los puntos según la dificultad
+            let pointsIncrement;
+            let gifPath;
+            switch (difficulty) {
+                case "easy":
+                    pointsIncrement = 5;
+                    gifPath = "./GIFTs/5_points.gif";
+                    break;
+                case "half":
+                    pointsIncrement = 7;
+                    gifPath = "./GIFTs/7_points.gif";
+                    break;
+                case "difficult":
+                    pointsIncrement = 10;
+                    gifPath = "./GIFTs/10_points.gif";
+                    break;
+                default:
+                    pointsIncrement = 5;
+                    gifPath = "./GIFTs/5_points.gif";
+            }
+    
+            // Cambia el src de la imagen
+            const gifAlertElement = document.getElementById("points_alert");
+            gifAlertElement.src = gifPath;
+    
+            // Hacer visible el elemento
+            const alertPointsElement = document.getElementById("alert_points");
+            alertPointsElement.style.visibility = "visible";
+    
+            // Agrega un temporizador para ocultar el elemento después de cierto tiempo (por ejemplo, 1.5 segundos)
+            setTimeout(() => {
+                alertPointsElement.style.visibility = "hidden";
+            }, 1500);
+    
+            // Llama a la función con la dificultad deseada
+            // Incrementa los puntos y actualiza el marcador
+            points += pointsIncrement;
+            updatePointsMarker();
+    
+            // Limpia la lista de cartas dadas vuelta
+            flippedCards = [];
+        });
+    }
+    
+    function handleDifferentCards() {
+        // Cartas diferentes, voltea las dos cartas anteriores después de un tiempo de espera
+        flippedCards.slice(0, 2).forEach(card => {
+            setTimeout(() => {
+                card.src = "./IMGs/necessary_images/back_of_a_letter.png";
+                card.classList.remove("flipped");
+            }, 300); // Ajusta el tiempo según sea necesario
+        }), 5000;
+    
+        // Actualiza la lista de cartas dadas vuelta manteniendo solo la última carta
+        flippedCards = flippedCards.slice(2);
+    }
+    
+    
+    
+    
 
     // Función para actualizar los puntos en el marcador
     function updatePointsMarker() {
@@ -466,9 +471,9 @@ const restartButton = document.getElementById("restart-button");
 
 restartButton.addEventListener("click", function () {
     hideGameOverScreen();
-    showGameOverScreen();
     startGame();
-})}})
+})}});
+
 
 console.log("Calling get_Recover_data");
 
