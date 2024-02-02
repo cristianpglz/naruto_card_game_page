@@ -1,3 +1,4 @@
+
 body{
   background-image: url(../IMGs/village-konoha.jpg);
   background-position: center center;
@@ -39,7 +40,10 @@ input{
   background-color: rgba(0, 0, 0, 0.539);
   color:  rgb(239, 122, 27);
 }
-
+footer{
+  padding: 1%;
+  border-radius: 0 0 20px 20px;
+}
 /*IDs*/
 #alert_points{
   position:absolute;
@@ -52,10 +56,7 @@ input{
   align-items: center;
   visibility: hidden;
 }
-footer{
-  padding: 1%;
-  border-radius: 0 0 20px 20px;
-}
+
 #overlay {
   position:absolute;
 
@@ -146,6 +147,7 @@ footer{
   grid-template-rows: 1, 1fr;
   background-color: rgba(0, 0, 0, 0.421);
   border-radius: 10%;
+  cursor: url("../IMGs/cursor/cursor_hand.png"), auto;
 }
 #container_song{
   position:fixed;
@@ -189,6 +191,7 @@ footer{
 #container_cards{
   grid-row: 1;
 }
+
 #formEntry{
   display: flex;
   flex-direction: column;
@@ -257,18 +260,16 @@ footer{
 .cards:hover{
   transition: 1s;
   transform: scale(1.5, 1.5);
-  cursor: pointer;
+  cursor: url("../IMGs/cursor/cursor_take.png"), auto;
 }
 .flipped {
     transform: rotateY(180deg);
     transform: 0.5s ease; /* Puedes ajustar la duración y el tipo de transición según sea necesario */
     transition: 1;
-
 }
 .flipped:hover{
   transform: rotateY(180deg) scale(1.5, 1.5);
   transition: transform 0.5s ease; /* Puedes ajustar la duración y el tipo de transición según sea necesario */
-  cursor: pointer;
 }
 
 
