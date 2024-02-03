@@ -59,7 +59,6 @@ footer{
 
 #overlay {
   position:absolute;
-
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.39); /* Fondo semitransparente */
@@ -87,42 +86,37 @@ footer{
 
 #game-over-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 2;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: rgba(0, 0, 0, 0.39); /* Fondo semitransparente */
+  z-index: 3;
 }
 
 #game-over-screen {
   visibility: hidden;
+  width: 100%;
+  height: 100%;
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   text-align: center;
-  background-color: #333;
-  padding: 20px;
-  border-radius: 10px;
-  color: white;
+  background: rgba(0, 0, 0, 0.39); /* Fondo semitransparente */
+  border-radius: 70px;
+  color:  rgb(239, 122, 27);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 #game-over-screen h1 {
   font-size: 2vw;
   margin-bottom: 10px;
-  z-index: 0;
-}
-
-#game-over-message {
-  font-size: 1.2vw;
-  margin-bottom: 20px;
+  z-index: 3;
 }
 
 #restart-button {
   background-color: #4CAF50;
-  color: white;
+  color:  rgb(239, 122, 27);
   padding: 10px 20px;
   font-size: 1em;
   border: none;
@@ -270,6 +264,13 @@ footer{
 .flipped:hover{
   transform: rotateY(180deg) scale(1.5, 1.5);
   transition: transform 0.5s ease; /* Puedes ajustar la duración y el tipo de transición según sea necesario */
+}
+.game-message-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 30%;
 }
 
 

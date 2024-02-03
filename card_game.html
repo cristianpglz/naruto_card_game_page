@@ -25,15 +25,18 @@ Online store project for the MASTERMIND academy
     </header>
     <main>
         <div id="container_game"  data-chosen-size="3x3">
-            <div id="overlay" class="overlay">
-                <div id="start-screen" class="start-screen">
-                    <p id="start-button" type="button">Comenzar juego</p>
+            <div id="overlay">
+                <div class="game-message-container">
+                    <div id="start-screen" class="start-screen">
+                        <p id="start-button" type="button">Comenzar juego</p>
+                    </div>
                 </div>
             </div>
-            <div id="game-over-screen" class="overlay">
-                <h1>Juego Terminado</h1>
-                <p id="game-over-message"></p>
-                <button id="restart-button">Reiniciar</button>
+            <div id="game-over-screen">
+                <div class="game-message-container">
+                    <h1>Juego Terminado</h1>
+                    <p id="game-over-message">Reiniciar</p>
+                </div>  
             </div>
             <div id="alert_points">
                 <img id="points_alert" src="/GIFTs/5_points.gif" alt="">

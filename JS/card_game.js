@@ -444,8 +444,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 gameOverScreen.style.hidden = true;
             }
         
-            gameOverOverlay.style.display = "flex";
-            gameOverScreen.style.display = "block";
+
         }
         
         function hideGameOverScreen() {
@@ -467,8 +466,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 timerReachedZero = rest_time();
         
                 if (timerReachedZero) {
-                    gameOverOverlay.hidden = false;
-                    gameOverScreen.hidden = false;
+                    console.log("¡El temporizador ha llegado a cero!");
+                    gameOverScreen.style.visibility = "visible";
                     clearInterval(idInterval); // Detener el temporizador una vez que llegue a cero
                 }
             }, 1000); // Ejecutar cada segundo
