@@ -84,49 +84,38 @@ footer{
   transform: scale(2, 2);
 }
 
-#game-over-overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.39); /* Fondo semitransparente */
-  z-index: 3;
-}
-
 #game-over-screen {
   visibility: hidden;
+  position:absolute;
   width: 100%;
   height: 100%;
-  position: absolute;
-  z-index: 3;
-  text-align: center;
   background: rgba(0, 0, 0, 0.39); /* Fondo semitransparente */
-  border-radius: 70px;
-  color:  rgb(239, 122, 27);
+  z-index: 3; /* Z-index mayor que el del juego */
+  border-radius: 10%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-#game-over-screen h1 {
-  font-size: 2vw;
-  margin-bottom: 10px;
   z-index: 3;
 }
 
-#restart-button {
-  background-color: #4CAF50;
-  color:  rgb(239, 122, 27);
-  padding: 10px 20px;
-  font-size: 1em;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  z-index: 0;
+#game-message-container {
+  width: 100%;
+}
+#restart-screen {
+  position: absolute;;
+  z-index: 3;
 }
 
-#restart-button:hover {
-  background-color: #45a049;
+#restart_button {
+  cursor: pointer;
+  transition: 1s;
+  font-size:2vw;
+  color: rgb(239, 122, 27);
+}
+
+#restart_button:hover {
+  transition: 1s;
+  transform: scale(2, 2);
 }
 
 #container_game{
