@@ -192,7 +192,19 @@ footer{
   width: 40%;
   animation: pulse 1s infinite; /* 1s de duración, repetición infinita */
 }
-
+#container_top_user{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid  rgba(239, 122, 27, 0.836);
+  border-radius:0 0 9% 9%;
+   width: 80%;
+   height: 50%;
+   margin: 10px;
+   padding: 10px;
+}
+#top_user{
+  color:rgba(239, 122, 27, 0.836);
+}
 /*CLASS*/
 .cards {
   transform-style: preserve-3d;

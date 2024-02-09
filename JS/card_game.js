@@ -189,20 +189,15 @@ document.addEventListener("DOMContentLoaded", function () {
         switch (difficulty) {
             case "easy":
                 timeFlip = 4000; // 4 segundos
-                countdown_rest = 60; // 60 segundos para easy
                 break;
             case "half":
                 timeFlip = 3000; // 3 segundos
-                countdown_rest = 50;
                 break;
             case "difficult":
                 timeFlip = 2000; // 2 segundos
-                countdown_rest = 40;
                 break;
             default:
                 timeFlip = 4000; // Valor predeterminado, 1 segundo
-                countdown_rest = 60; // 60 segundos para easy
-
         }
         console.log(difficulty);
     }
@@ -355,14 +350,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const startButton = document.getElementById("start-button");
     const overlay = document.getElementById("overlay");
-
+    const restartButton = document.getElementById("restart_button");
+    const gameOverScreen = document.getElementById("game-over-screen");
     startButton.addEventListener("click", function () {
         hideStartScreen();
         startGame(); // Puedes pasar la dificultad deseada aquí
     });
- 
+    restartButton.addEventListener("click", function () {
+        console.log("¡has dado a rerestar!");
+        hideGameOverScreen();
+        location.reload();
+    });
     function hideStartScreen() {
         overlay.style.display = "none";
+    }
+    function hideGameOverScreen() {
+        gameOverScreen.style.display = "none";
     }
     function information_user() {
         // Obtén el nombre de usuario del sessionStorage
@@ -409,7 +412,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 countdown_rest = 50;
                 break;
             case "difficult":
-                countdown_rest = 40;
+                countdown_rest = 2;
                 break;
             default:
                 countdown_rest = 60; // 60 segundos para easy
@@ -432,30 +435,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         return false; // Indica que el temporizador aún no ha llegado a cero
     }
-        
-    const gameOverScreen = document.getElementById("game-over-screen");
     
-    function showGameOverScreen(success) {
+    function showGameOverScreen() {
     
         if(countdown_rest){
-            gameOverScreen.style.hidden = true;
+            gameOverScreen.style.hidden = false;
         }
         else if(!countdown_rest){
             gameOverScreen.style.visibility = "visible";
-            restartButton.addEventListener("click", function () {
-                console.log("¡El temporizador ha llegado a cero!");
-                hideGameOverScreen();
-                // Restablecer el estado del juego
-                startGame();
-            })
         }
-    
+
     }
-    
-    function hideGameOverScreen() {
-    
-        gameOverScreen.style.display = "none";
-    }
+    function topUser() {
+        let top_user = document.getElementById("top_user");
+        top_user.value = user;
+        }
     
     function game_events() {
         showGameOverScreen();
@@ -472,16 +466,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     game_events();
-    
-    const restartButton = document.getElementById("restart-button");
-    
-    restartButton.addEventListener("click", function () {
-        hideGameOverScreen();
-        // Restablecer el estado del juego
-        countdown_rest = 60; // Restablecer la cuenta regresiva para la dificultad fácil
-        countdownElement.value = countdown_rest; // Actualizar la visualización de la cuenta regresiva
-        game_events(); // Comenzar el juego de nuevo
-    });}},)
+    topUser (points);
+    }},)
 
 
 console.log("Calling get_Recover_data");
