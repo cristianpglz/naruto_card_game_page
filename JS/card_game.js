@@ -5,7 +5,7 @@ var menu_song;
 var button_pause;
 var nick_user;
 var idInterval;
-var points = 0;
+var points;
 
 document.addEventListener("DOMContentLoaded", function () {
     // Obtener el historial del localStorage
@@ -58,7 +58,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    const container = document.getElementById('all_the_cards');
 
     cargarRutasDeImagenes('IMGs/game_characters')
         .then(imagePaths => {
@@ -118,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
         allTheCardsContainer.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`;
 
         // Crear un array de elementos img
-        const cards = imagePaths.slice(0, totalCards / 2).flatMap((path, index) => {
+        const cards = imagePaths.slice(0, totalCards / 2).flatMap((path) => {
             const card1 = document.createElement('img');
             card1.classList.add("cards");
             card1.src = "./IMGs/necessary_images/back_of_a_letter.png"; // Imagen de respaldo por defecto
@@ -146,7 +145,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Agregar las cartas al contenedor sin borrar el contenido anterior
         for (let i = 0; i < totalCards; i++) {
-            const row = Math.floor(i / boardSize);
             const col = i % boardSize;
 
             // Configurar la ruta de la imagen de respaldo y el atributo data-front-image
@@ -325,6 +323,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Agrega un temporizador para ocultar el elemento después de cierto tiempo (por ejemplo, 1.5 segundos)
                 setTimeout(() => {
                     alertPointsElement.style.visibility = "hidden";
+                    points = 0;
                     // Incrementa los puntos y actualiza el marcador
                     points += pointsIncrement;
                     updatePointsMarker();
@@ -346,6 +345,7 @@ document.addEventListener("DOMContentLoaded", function () {
             pointsMarker.value = points;
             console.log(points);
         }
+        points.push;
     }
 
     const startButton = document.getElementById("start-button");
@@ -447,8 +447,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
     function topUser() {
-        let top_user = document.getElementById("top_user");
-        top_user.value = user;
+        var user = sessionStorage.getItem('nick_name');
+        var content_top = document.getElementById("content_top_user")
+        const top_user = document.createElement('li');
+        var users = JSON.parse(localStorage.getItem('topUsers')) || [];
+         // Agregar el nuevo usuario y puntuación
+         users.push({ username: username, score: score });
+        
+         // Ordenar los usuarios por puntuación de mayor a menor
+         users.sort((a, b) => b.score - a.score);
+         
+         // Limitar la lista a los 10 mejores usuarios
+         users = users.slice(0, 10);
+         
+         // Guardar la lista actualizada en el localStorage
+         localStorage.setItem('topUsers', JSON.stringify(users));
+         for (var i = 0; i < users.length; i++) {
+            content_top.innerHTML += topUser + users[i].user + " - " + users[i].points + top_user;
+         }
         }
     
     function game_events() {
@@ -466,7 +482,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     game_events();
-    topUser (points);
+    topUser ();
     }},)
 
 

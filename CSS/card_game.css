@@ -202,9 +202,6 @@ footer{
    margin: 10px;
    padding: 10px;
 }
-#top_user{
-  color:rgba(239, 122, 27, 0.836);
-}
 /*CLASS*/
 .cards {
   transform-style: preserve-3d;
@@ -272,6 +269,9 @@ footer{
   align-items: center;
   width: 50%;
   height: 30%;
+}
+.top_user{
+  color:rgba(239, 122, 27, 0.836);
 }
 
 
