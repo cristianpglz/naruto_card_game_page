@@ -193,14 +193,23 @@ footer{
   animation: pulse 1s infinite; /* 1s de duración, repetición infinita */
 }
 #container_top_user{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid  rgba(239, 122, 27, 0.836);
   border-radius:0 0 9% 9%;
    width: 80%;
    height: 50%;
    margin: 10px;
    padding: 10px;
+}
+#content_top_user{
+  display: flex;
+  flex-wrap: wrap;  
+}
+#content_top_user li{
+  margin: 10px;
+  color: rgba(239, 122, 27, 0.836);
 }
 /*CLASS*/
 .cards {
@@ -270,9 +279,7 @@ footer{
   width: 50%;
   height: 30%;
 }
-.top_user{
-  color:rgba(239, 122, 27, 0.836);
-}
+
 
 
 

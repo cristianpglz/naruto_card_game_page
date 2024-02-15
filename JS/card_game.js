@@ -5,7 +5,7 @@ var menu_song;
 var button_pause;
 var nick_user;
 var idInterval;
-var points;
+var points = 0;
 
 document.addEventListener("DOMContentLoaded", function () {
     // Obtener el historial del localStorage
@@ -323,7 +323,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Agrega un temporizador para ocultar el elemento después de cierto tiempo (por ejemplo, 1.5 segundos)
                 setTimeout(() => {
                     alertPointsElement.style.visibility = "hidden";
-                    points = 0;
                     // Incrementa los puntos y actualiza el marcador
                     points += pointsIncrement;
                     updatePointsMarker();
@@ -446,28 +445,67 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
     }
-    function topUser() {
-        var user = sessionStorage.getItem('nick_name');
-        var content_top = document.getElementById("content_top_user")
-        const top_user = document.createElement('li');
-        var users = JSON.parse(localStorage.getItem('topUsers')) || [];
-         // Agregar el nuevo usuario y puntuación
-         users.push({ username: username, score: score });
+    // Función para guardar los datos del usuario al finalizar la partida
+    function guardarPuntos() {
+        // Obtener el nombre de usuario y los puntos del sessionStorage
+        var username = sessionStorage.getItem('nick_name');
+        var score = parseInt(document.getElementById('points').value); // Parsear el puntaje a un número entero
         
-         // Ordenar los usuarios por puntuación de mayor a menor
-         users.sort((a, b) => b.score - a.score);
-         
-         // Limitar la lista a los 10 mejores usuarios
-         users = users.slice(0, 10);
-         
-         // Guardar la lista actualizada en el localStorage
-         localStorage.setItem('topUsers', JSON.stringify(users));
-         for (var i = 0; i < users.length; i++) {
-            content_top.innerHTML += topUser + users[i].user + " - " + users[i].points + top_user;
-         }
+        // Verificar si el nombre de usuario y el puntaje son válidos
+        if (!username || isNaN(score)) {
+            alert('Por favor, ingresa un nombre de usuario y un puntaje válido.');
+            return;
         }
     
+        // Obtener la lista de los mejores usuarios del localStorage para la dificultad actual
+        var users = JSON.parse(localStorage.getItem(`topUsers_${difficulty}`)) || [];
+    
+        // Verificar si el usuario ya existe en la lista de mejores usuarios
+        var existingUser = users.find(user => user.username === username);
+    
+        if (existingUser) {
+            // Si el usuario ya existe, actualizamos sus puntos
+            existingUser.score += score;
+        } else {
+            // Si el usuario no existe, lo agregamos a la lista
+            users.push({ username: username, score: score });
+        }
+    
+        // Ordenar los usuarios por puntuación de mayor a menor
+        users.sort((a, b) => b.score - a.score);
+        
+        // Limitar la lista a los 10 mejores usuarios
+        users = users.slice(0, 10);
+    
+        // Guardar la lista actualizada en el localStorage para la dificultad actual
+        localStorage.setItem(`topUsers_${difficulty}`, JSON.stringify(users));
+    }
+    
+    // Función para mostrar los mejores usuarios de la dificultad actual
+    function mostrarTopUsers() {
+        // Obtener el contenedor donde se mostrarán los datos
+        var content_top = document.getElementById("content_top_user");
+    
+        // Obtener la lista de los mejores usuarios del localStorage para la dificultad actual
+        var users = JSON.parse(localStorage.getItem(`topUsers_${difficulty}`)) || [];
+    
+        // Limpiar el contenido del contenedor antes de agregar los nuevos datos
+        content_top.innerHTML = '';
+    
+        // Iterar sobre los usuarios y agregarlos al contenedor como elementos de lista
+        users.forEach((user, index) => {
+            var li = document.createElement('li');
+            li.textContent = `${index + 1}. ${user.username} - ${user.score}`;
+            content_top.appendChild(li);
+        });
+    }
+    
+
+    
+    
+    
     function game_events() {
+        mostrarTopUsers();
         showGameOverScreen();
         let timerReachedZero = false;
         let idInterval = setInterval(function () {
@@ -477,12 +515,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log("¡El temporizador ha llegado a cero!");
                 clearInterval(idInterval); // Detener el temporizador una vez que llegue a cero
                 showGameOverScreen();
+                guardarPuntos();
             }
         }, 1000); // Ejecutar cada segundo
     }
-    
     game_events();
-    topUser ();
     }},)
 
 
