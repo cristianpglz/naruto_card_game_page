@@ -8,8 +8,12 @@ var idInterval;
 var points = 0;
 
 document.addEventListener("DOMContentLoaded", function () {
-    const difficulty = localStorage.getItem('difficulty');    
-    console.log(difficulty);
+    // Obtener el historial del localStorage
+    const historyFromLocalStorage = localStorage.getItem('history');
+    // Convertir la cadena JSON a un array de objetos
+    const historyArray = JSON.parse(historyFromLocalStorage);
+    // Verificar si hay algún elemento en el historial y obtener el valor de 'difficulty'
+    const difficulty = historyArray.length > 0 ? historyArray[0].difficulty : 'easy';    
     const menu_song = document.getElementById("img_menu");
     const button_pause = document.getElementById("img_music");
     const song = document.getElementById("music");
@@ -54,7 +58,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    const container = document.getElementById('all_the_cards');
 
     cargarRutasDeImagenes('IMGs/game_characters')
         .then(imagePaths => {
@@ -114,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
         allTheCardsContainer.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`;
 
         // Crear un array de elementos img
-        const cards = imagePaths.slice(0, totalCards / 2).flatMap((path, index) => {
+        const cards = imagePaths.slice(0, totalCards / 2).flatMap((path) => {
             const card1 = document.createElement('img');
             card1.classList.add("cards");
             card1.src = "./IMGs/necessary_images/back_of_a_letter.png"; // Imagen de respaldo por defecto
@@ -142,7 +145,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Agregar las cartas al contenedor sin borrar el contenido anterior
         for (let i = 0; i < totalCards; i++) {
-            const row = Math.floor(i / boardSize);
             const col = i % boardSize;
 
             // Configurar la ruta de la imagen de respaldo y el atributo data-front-image
@@ -181,131 +183,159 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     let flippedCards = [];
-    function setTime(difficulty) {
+    function setTime() {
         switch (difficulty) {
             case "easy":
                 timeFlip = 4000; // 4 segundos
-                countdown_rest = 60; // 60 segundos para easy
                 break;
             case "half":
                 timeFlip = 3000; // 3 segundos
-                countdown_rest = 50;
                 break;
             case "difficult":
                 timeFlip = 2000; // 2 segundos
-                countdown_rest = 40;
                 break;
             default:
                 timeFlip = 4000; // Valor predeterminado, 1 segundo
-                countdown_rest = 60; // 60 segundos para easy
-
         }
+        console.log(difficulty);
     }
-
-    function flipCard(card, difficulty) {
+    function flipCard(card) {
         setTime(difficulty);
         const currentSrc = card.src;
         const frontImage = card.getAttribute("data-front-image");
-
         // Verifica si la carta está boca abajo (es la imagen de respaldo)
         if (currentSrc.includes("back_of_a_letter.png")) {
             // Aplica la rotación manualmente usando la clase flipped
             card.classList.add("flipped");
-
+    
             // Espera un breve período antes de cambiar la imagen
             setTimeout(() => {
                 // Cambia la imagen a la parte frontal de la carta
                 card.src = frontImage;
-
-                // Verifica si hay dos cartas levantadas
-                if (flippedCards.length === 1) {
-                    const previousCard = flippedCards[0];
+                // Agrega la carta a la lista de cartas levantadas
+                flippedCards.push(card);
                 
-                    // Verifica si las dos cartas levantadas son iguales
-                    if (previousCard.getAttribute("data-front-image") === frontImage) {
-                        // Cartas iguales, realiza alguna animación o mensaje
-                        setTimeout((difficulty) => {
-                            const alertPointsElement = document.getElementById("alert_points");
-                            const gifAlertElement = document.getElementsByClassName("points_aler");
-                
-                            // Incrementa los puntos según la dificultad
-                            let pointsIncrement;
-                            let gifPath;
-                            console.log(difficulty);
-                            switch (difficulty) {
-                                case "easy":
-                                    pointsIncrement = 5;
-                                    gifPath = "./GIFTs/5_points.gif";
-                                    break;
-                                case "half":
-                                    pointsIncrement = 7;
-                                    gifPath = "./GIFTs/7_points.gif";
-                                    break;
-                                case "difficult":
-                                    pointsIncrement = 10;
-                                    gifPath = "./GIFTs/10_points.gif";
-                                    break;
-                                default:
-                                    pointsIncrement = 5;
-                                    gifPath = "./GIFTs/5_points.gif";
-                            }
-                
-                            // Cambia el src de la imagen
-                            gifAlertElement.src = gifPath;
-                
-                            // Hacer visible el elemento
-                            alertPointsElement.style.visibility = "visible";
-                
-                            // Agrega un temporizador para ocultar el elemento después de cierto tiempo (por ejemplo, 3 segundos)
-                            setTimeout(() => {
-                                alertPointsElement.style.visibility = "hidden";
-                            }, 3000);
-                         // Añadí un retraso de 1 segundo para simular la espera de la animación, puedes ajustarlo según tus necesidades
-            
-                
-                        // Llama a la función con la dificultad deseada
-                            
-                            // Incrementa los puntos y actualiza el marcador
-                            points += pointsIncrement;
-                            updatePointsMarker();
-
-                    }, 500); 
-                    // Ajusta el tiempo según sea necesario
-
-                        // Limpia la lista de cartas dadas vuelta
-                        flippedCards = [];
-                    } else {
-
-                        // Cartas diferentes, espera un breve período y voltea ambas
+                console.log(flippedCards.length);
+                console.log(flippedCards[2]);
+                setTimeout(() => {
+                    if (flippedCards.length === 2){
                         setTimeout(() => {
-                            // Voltea ambas cartas
-                            card.src = "./IMGs/necessary_images/back_of_a_letter.png";
-                            previousCard.src = "./IMGs/necessary_images/back_of_a_letter.png";
-                            card.classList.remove("flipped");
-                            previousCard.classList.remove("flipped");
-                            // Puedes agregar alguna animación o mensaje aquí
-                        }, 500); // Ajusta el tiempo según sea necesario
+                            comprobate();
+                        },timeFlip)
+                    }else if (flippedCards.length === 1 && flippedCards[2] === undefined) {
+                        console.log("Comprobando");
+                        // Realiza la comprobación después de un tiempo de espera
+                        setTimeout(() => {
 
-                        // Limpia la lista de cartas dadas vuelta
-                        flippedCards = [];
+                            handleDiferentCards();
+                            
+                        }, timeFlip);
+                }
+                },1000)//Aumenta el tiempo de espera para que se pueda leer la cantidad de cartas levantadas
+                if(flippedCards.length > 2 ){
+                    if (flippedCards[0].getAttribute("data-front-image") === flippedCards[1].getAttribute("data-front-image")) {
+                        // Cartas iguales, realiza alguna animación o mensaje
+                        handleEqualCards();
+
+                    }else {
+
+                        handleDiferentCards();
+
                     }
                 }
-                 else {
-                    // Cartas diferentes, espera un breve período y voltea ambas
-                    setTimeout(() => {
-                        // Voltea ambas cartas
-                        card.src = "./IMGs/necessary_images/back_of_a_letter.png";
-                        previousCard.src = "./IMGs/necessary_images/back_of_a_letter.png";
-                        card.classList.remove("flipped");
-                        previousCard.classList.remove("flipped");
-                        // Puedes agregar alguna animación o mensaje aquí
-                    }, timeFlip); // Ajusta el tiempo según sea necesario
-                    // No hay otras cartas levantadas, simplemente agrega la actual a la lista
-                    flippedCards.push(card);
-                }
-            }, 300); // Ajusta el tiempo según sea necesario
+            });
         }
     }
+    function comprobate() {
+        // Verifica si las dos cartas levantadas son iguales
+        if (flippedCards[0].getAttribute("data-front-image") === flippedCards[1].getAttribute("data-front-image")) {
+            // Cartas iguales, realiza alguna animación o mensaje
+            handleEqualCards();
+            console.log("¡Cartas iguales!");
+        } else {
+            // Cartas diferentes, voltea ambas cartas después de un tiempo de espera
+            handleDiferentCards();
+            console.log("¡Cartas diferentes!");
+        }
+    }
+       function handleDiferentCards() {
+               // Baja las cartas que estén levantadas sin animación
+               for (const flippedCard of flippedCards) {
+                   flippedCard.src = "./IMGs/necessary_images/back_of_a_letter.png";
+                   flippedCard.classList.remove("flipped");
+                }
+               // Limpia la lista de cartas levantadas
+               flippedCards = [];
+               card.classList.add("flipped");
+               // Cambia la imagen a la parte frontal de la carta
+               card.src = frontImage;
+    
+               // Agrega la carta a la lista de cartas levantadas
+               flippedCards.push(card); 
+               flippedCards = [];  
+       }
+        // Declarar un array para almacenar las cartas adivinadas
+        let guessedCards = [];
+    
+        function handleEqualCards() {
+            
+            // Agrega las cartas adivinadas al array de cartas adivinadas
+            guessedCards.push(flippedCards[0]);
+            guessedCards.push(flippedCards[1]);
+            if(flippedCards[2] !== undefined){
+                flippedCards[2].src = "./IMGs/necessary_images/back_of_a_letter.png";
+                flippedCards[2].classList.remove("flipped");  
+            }
+            // Muestra las cartas adivinadas todo el tiempo
+            for (const card of guessedCards) {
+                card.classList.add("guessed");
+            }
+            console.log(difficulty);
+                // Cartas iguales, realiza alguna animación o mensaje
+                // Incrementa los puntos según la dificultad
+                let pointsIncrement;
+                let gifPath;
+                switch (difficulty) {
+                    case "easy":
+                        pointsIncrement = 5;
+                        gifPath = "./GIFTs/5_points.gif";
+                        break;
+                    case "half":
+                        pointsIncrement = 7;
+                        gifPath = "./GIFTs/7_points.gif";
+                        break;
+                    case "difficult":
+                        pointsIncrement = 10;
+                        gifPath = "./GIFTs/10_points.gif";
+                        break;
+                    default:
+                        pointsIncrement = 5;
+                        gifPath = "./GIFTs/5_points.gif";
+                }
+                // Cambia el src de la imagen
+                const gifAlertElement = document.getElementById("points_alert");
+                gifAlertElement.src = gifPath;
+            
+                // Hacer visible el elemento
+                const alertPointsElement = document.getElementById("alert_points");
+                alertPointsElement.style.visibility = "visible";
+            
+                // Agrega un temporizador para ocultar el elemento después de cierto tiempo (por ejemplo, 1.5 segundos)
+                setTimeout(() => {
+                    alertPointsElement.style.visibility = "hidden";
+                    // Incrementa los puntos y actualiza el marcador
+                    points += pointsIncrement;
+                    updatePointsMarker();
+                    // Limpia la lista de cartas dadas vuelta
+                    flippedCards = [];
+                }, 1500);
+                flippedCards = [];
+    
+            }
+    
+    
+    
+    
 
     // Función para actualizar los puntos en el marcador
     function updatePointsMarker() {
@@ -314,18 +344,27 @@ document.addEventListener("DOMContentLoaded", function () {
             pointsMarker.value = points;
             console.log(points);
         }
+        points.push;
     }
 
     const startButton = document.getElementById("start-button");
     const overlay = document.getElementById("overlay");
-
+    const restartButton = document.getElementById("restart_button");
+    const gameOverScreen = document.getElementById("game-over-screen");
     startButton.addEventListener("click", function () {
         hideStartScreen();
-        startGame("easy"); // Puedes pasar la dificultad deseada aquí
+        startGame(); // Puedes pasar la dificultad deseada aquí
     });
-
+    restartButton.addEventListener("click", function () {
+        console.log("¡has dado a rerestar!");
+        hideGameOverScreen();
+        location.reload();
+    });
     function hideStartScreen() {
         overlay.style.display = "none";
+    }
+    function hideGameOverScreen() {
+        gameOverScreen.style.display = "none";
     }
     function information_user() {
         // Obtén el nombre de usuario del sessionStorage
@@ -352,10 +391,14 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             console.error("Major Avatar element not found.");
         }
-    }    
-    information_user(); // Llamada a la función corregida
 
-    function startGame(difficulty) {
+        var status_difficulty= document.getElementById("set_difficulty");
+        status_difficulty.value = difficulty;
+
+    }    
+    information_user(); // Llamada a la función para mostrar la información del usuario
+
+    function startGame() {
         let countdownElement = document.getElementById("countdown");
         let countdown_rest;
 
@@ -368,7 +411,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 countdown_rest = 50;
                 break;
             case "difficult":
-                countdown_rest = 40;
+                countdown_rest = 2;
                 break;
             default:
                 countdown_rest = 60; // 60 segundos para easy
@@ -376,91 +419,109 @@ document.addEventListener("DOMContentLoaded", function () {
 
         countdownElement.value = countdown_rest;
         
+    
+    function rest_time() {
+        countdown_rest--;
+        
+        countdownElement.value = countdown_rest;
+        
+        console.log(countdown_rest);
+        
+        if (countdown_rest === 0) {
+            console.log("¡Contador ha llegado a cero!");
+            countdownElement = 0;
+            return true; // Indica que el temporizador ha llegado a cero
+        }
+        return false; // Indica que el temporizador aún no ha llegado a cero
+    }
+    
+    function showGameOverScreen() {
+    
+        if(countdown_rest){
+            gameOverScreen.style.hidden = false;
+        }
+        else if(!countdown_rest){
+            gameOverScreen.style.visibility = "visible";
+        }
 
-        function rest_time() {
-            countdown_rest--;
+    }
+    // Función para guardar los datos del usuario al finalizar la partida
+    function guardarPuntos() {
+        // Obtener el nombre de usuario y los puntos del sessionStorage
+        var username = sessionStorage.getItem('nick_name');
+        var score = parseInt(document.getElementById('points').value); // Parsear el puntaje a un número entero
         
-            countdownElement.value = countdown_rest;
+        // Verificar si el nombre de usuario y el puntaje son válidos
+        if (!username || isNaN(score)) {
+            alert('Por favor, ingresa un nombre de usuario y un puntaje válido.');
+            return;
+        }
+    
+        // Obtener la lista de los mejores usuarios del localStorage para la dificultad actual
+        var users = JSON.parse(localStorage.getItem(`topUsers_${difficulty}`)) || [];
+    
+        // Verificar si el usuario ya existe en la lista de mejores usuarios
+        var existingUser = users.find(user => user.username === username);
+    
+        if (existingUser) {
+            // Si el usuario ya existe, actualizamos sus puntos
+            existingUser.score += score;
+        } else {
+            // Si el usuario no existe, lo agregamos a la lista
+            users.push({ username: username, score: score });
+        }
+    
+        // Ordenar los usuarios por puntuación de mayor a menor
+        users.sort((a, b) => b.score - a.score);
         
-            console.log(countdown_rest);
-        
-            if (countdown_rest === 0) {
-                console.log("¡Contador ha llegado a cero!");
-                countdownElement = 0;
-                return true; // Indica que el temporizador ha llegado a cero
+        // Limitar la lista a los 10 mejores usuarios
+        users = users.slice(0, 10);
+    
+        // Guardar la lista actualizada en el localStorage para la dificultad actual
+        localStorage.setItem(`topUsers_${difficulty}`, JSON.stringify(users));
+    }
+    
+    // Función para mostrar los mejores usuarios de la dificultad actual
+    function mostrarTopUsers() {
+        // Obtener el contenedor donde se mostrarán los datos
+        var content_top = document.getElementById("content_top_user");
+    
+        // Obtener la lista de los mejores usuarios del localStorage para la dificultad actual
+        var users = JSON.parse(localStorage.getItem(`topUsers_${difficulty}`)) || [];
+    
+        // Limpiar el contenido del contenedor antes de agregar los nuevos datos
+        content_top.innerHTML = '';
+    
+        // Iterar sobre los usuarios y agregarlos al contenedor como elementos de lista
+        users.forEach((user, index) => {
+            var li = document.createElement('li');
+            li.textContent = `${index + 1}. ${user.username} - ${user.score}`;
+            content_top.appendChild(li);
+        });
+    }
+    
+
+    
+    
+    
+    function game_events() {
+        mostrarTopUsers();
+        showGameOverScreen();
+        let timerReachedZero = false;
+        let idInterval = setInterval(function () {
+            timerReachedZero = rest_time();
+    
+            if (timerReachedZero) {
+                console.log("¡El temporizador ha llegado a cero!");
+                clearInterval(idInterval); // Detener el temporizador una vez que llegue a cero
+                showGameOverScreen();
+                guardarPuntos();
             }
-            return false; // Indica que el temporizador aún no ha llegado a cero
-        }
-        
-        
-        
-        function showGameOverScreen(success) {
-            const gameOverOverlay = document.getElementById("game-over-overlay");
-            const gameOverScreen = document.getElementById("game-over-screen");
-            const gameOverMessage = document.getElementById("game-over-message");
-        
-            if (success) {
-                gameOverMessage.textContent = "¡Felicidades! Has completado el juego.";
-            } else {
-                gameOverMessage.textContent = "¡Tiempo agotado! Inténtalo de nuevo.";
-            }
-        
-            gameOverOverlay.style.display = "flex";
-            gameOverScreen.style.display = "block";
-        }
-        
-        function hideGameOverScreen() {
-            const gameOverOverlay = document.getElementById("game-over-overlay");
-            const gameOverScreen = document.getElementById("game-over-screen");
-        
-            gameOverOverlay.style.display = "none";
-            gameOverScreen.style.display = "none";
-        }
-        
+        }, 1000); // Ejecutar cada segundo
+    }
+    game_events();
+    }},)
 
-        function game_events() {
-            const gameOverOverlay = document.getElementById("game-over-overlay");
-            const gameOverScreen = document.getElementById("game-over-screen");
-            // Reiniciar el temporizador
-            let timerReachedZero = false;
-        
-            // Ejecutar el temporizador y verificar si llegó a cero
-            let idInterval = setInterval(function () {
-                timerReachedZero = rest_time();
-        
-                if (timerReachedZero) {
-                    // Realizar acciones adicionales si el temporizador llegó a cero
-                    console.log("Realizar acciones adicionales aquí");
-        
-                    // Mostrar la pantalla de "game over" solo si no se ha mostrado antes
-                    if (gameOverScreen.hidden) {
-                        console.log("estoy aqui");
-                        gameOverOverlay.hidden = false;
-                        gameOverScreen.hidden = false;
-        
-                        // Reinicia el juego después de un breve período (ajusta según sea necesario)
-                        setTimeout(function () {
-                            resetGame();
-                        }, 2000);
-                    }
-        
-                    // Detener el intervalo
-                    clearInterval(idInterval);
-                }
-            }, 1000);
-        }
-        
-        
-
-        // Llama a la función game_events
-        game_events();
-const restartButton = document.getElementById("restart-button");
-
-restartButton.addEventListener("click", function () {
-    hideGameOverScreen();
-    showGameOverScreen();
-    startGame(difficulty);
-})}})
 
 console.log("Calling get_Recover_data");
 

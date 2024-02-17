@@ -16,27 +16,31 @@ Online store project for the MASTERMIND academy
 </head>
 <body>
     <header>
-        <div id="container_song">
+        <nav id="container_song">
             <img id="img_music" class="styles_imgs" src="./IMGs/necessary_images/play_audio.png" alt="">
             <img id="img_menu" class="styles_imgs" src="./IMGs/necessary_images/song_menu.png" alt="">
             <audio name="music"src="./sound/naruto_music.m4a" autoplay  preload="auto" loop id="music"></audio>
-        </div>
+        </nav>
         <img id="logo" src="./IMGs/necessary_images/png-konoha.png" alt="image main logo" width="300">
     </header>
     <main>
         <div id="container_game"  data-chosen-size="3x3">
-            <div id="overlay" class="overlay">
-                <div id="start-screen" class="start-screen">
-                    <p id="start-button" type="button">Comenzar juego</p>
+            <div id="overlay">
+                <div class="game-message-container">
+                    <div id="start-screen">
+                        <p id="start-button" type="button">Comenzar juego</p>
+                    </div>
                 </div>
             </div>
-            <div id="game-over-screen" class="overlay">
-                <h1>Juego Terminado</h1>
-                <p id="game-over-message"></p>
-                <button id="restart-button">Reiniciar</button>
+            <div id="game-over-screen">
+                <div class="game-message-container">
+                    <div id="restart-screen">
+                        <p id="restart_button" type="button">Reiniciar</p>
+                    </div>
+                </div>  
             </div>
             <div id="alert_points">
-                <img class="points_alert" src="/GIFTs/5_points.gif" alt="">
+                <img id="points_alert" src="/GIFTs/5_points.gif" alt="">
             </div>      
             <div id="container_cards">
                 <ul id="all_the_cards">
@@ -79,6 +83,12 @@ Online store project for the MASTERMIND academy
                     <button class="skills_button">descartar una pareja</button>
                     <button class="skills_button">hola</button>
             </div>
+            </div>
+            <div id="container_top_user">
+                <div>
+                    <ul id="content_top_user">
+                    </ul>
+                </div>
             </div>
         </div>
     </main>

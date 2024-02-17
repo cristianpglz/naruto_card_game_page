@@ -1,11 +1,11 @@
 
-
+const list_users = [];
 var nick_user;
 var chosen_difficulty;
 var chosen_size;
 var geo_location;
 var avatar;
-
+var points;
 
 function Recover_data(){
     nick_user = document.getElementById("nick_name");
@@ -13,7 +13,6 @@ function Recover_data(){
     chosen_size = document.getElementById("number_of_cards");
     geo_location = document.getElementById("geolocationSearch");
     avatar = document.getElementById("major_avatar");
-
     console.log("Recovered data:", { nick_user, chosen_difficulty, chosen_size, avatar, geo_location });
 
     sessionStorage.setItem('nick_name', nick_user.value);
@@ -34,7 +33,7 @@ function get_Recover_data(){
     
     console.log("Recovered data:", nick_user, chosen_difficulty, chosen_size, avatar, geo_location);
     
-    return { nick_user, chosen_difficulty, chosen_size, avatar, geo_location };
+    return { nick_user, chosen_difficulty, chosen_size, avatar, geo_location};
 }
 
 
@@ -67,26 +66,28 @@ function locationData() {
 
 
 function userHistory() {
-    var { nick_user, chosen_difficulty, chosen_size, avatar, geolocationSearch } = get_Recover_data();
-
-    var historyStorage = localStorage.getItem('save_history');
-    var save_history;
-
-    if (historyStorage == null) {
-        save_history = [];
-    } else {
-        save_history = JSON.parse(historyStorage);
-    }
-
+    var { nick_user, chosen_difficulty, chosen_size, avatar, geo_location} = get_Recover_data();
+    
     var userRecord = {
-        user: nick_user,
-        difficulty: chosen_difficulty,
-        size: chosen_size,
-        avatar: avatar,
-        location: geolocationSearch,
-        date: Date.now()
-    };
-
-    save_history.push(userRecord);
-    localStorage.setItem('history', JSON.stringify(save_history));
-}
+     user: nick_user,
+     difficulty: chosen_difficulty,
+     size: chosen_size,
+     avatar: avatar,
+     location: geo_location,
+     date: Date.now()
+     };
+    
+     list_users.push(userRecord);
+    
+     var historyStorage = localStorage.getItem('save_history');
+     var save_history;
+    
+     if (historyStorage == null) {
+      save_history = [];
+      } else {
+     save_history = JSON.parse(historyStorage);
+     }
+    
+     save_history.push(userRecord);
+     localStorage.setItem('history', JSON.stringify(save_history));
+    }
