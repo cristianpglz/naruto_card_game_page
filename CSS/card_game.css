@@ -53,10 +53,11 @@ input{
   justify-content: center;
   align-items: center;
   visibility: hidden;
+  background: rgba(0, 0, 0, 0.254); /* Fondo semitransparente */
+  border-radius: 10%;
 }
 #overlay {
   position:absolute;
-
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.39); /* Fondo semitransparente */
@@ -68,7 +69,7 @@ input{
   z-index: 3;
 }
 #start-screen {
-  position: absolute;;
+  position: absolute;
   z-index: 3;
 }
 #start-button{
@@ -273,7 +274,6 @@ input{
 
 @keyframes pulse {
   0% {
-    transition: 1s;
     transform: scale(1); /* Escala normal al inicio */
   }
   50% {
