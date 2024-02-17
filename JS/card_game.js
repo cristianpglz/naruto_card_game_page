@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const menu_song = document.getElementById("img_menu");
     const button_pause = document.getElementById("img_music");
     const song = document.getElementById("music");
-    song.volume = 0.10;
+    song.volume = 0.5;
 
     // Cambiar la imagen y mutear/desmutear el audio al hacer clic en la imagen
     button_pause.addEventListener("click", function () {
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(imagePaths => {
             // Recupera el tamaño del localStorage
             const chosenSize = sessionStorage.getItem('number_of_cards'); // valor predeterminado si no se encuentra en el localStorage
-            // Por ejemplo, podrías usar este array en la inicialización del juego
+            // array en la inicialización del juego
             initializeCardGame(imagePaths, chosenSize);
         })
         .catch(error => {
@@ -207,9 +207,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (currentSrc.includes("back_of_a_letter.png")) {
             // Aplica la rotación manualmente usando la clase flipped
             card.classList.add("flipped");
-    
-            // Espera un breve período antes de cambiar la imagen
-            setTimeout(() => {
                 // Cambia la imagen a la parte frontal de la carta
                 card.src = frontImage;
                 // Agrega la carta a la lista de cartas levantadas
@@ -231,8 +228,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             
                         }, timeFlip);
                 }
-                },1000)//Aumenta el tiempo de espera para que se pueda leer la cantidad de cartas levantadas
-                if(flippedCards.length > 2 ){
+                if(flippedCards.length >= 3){
                     if (flippedCards[0].getAttribute("data-front-image") === flippedCards[1].getAttribute("data-front-image")) {
                         // Cartas iguales, realiza alguna animación o mensaje
                         handleEqualCards();
@@ -250,6 +246,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Verifica si las dos cartas levantadas son iguales
         if (flippedCards[0].getAttribute("data-front-image") === flippedCards[1].getAttribute("data-front-image")) {
             // Cartas iguales, realiza alguna animación o mensaje
+            console.log();
             handleEqualCards();
             console.log("¡Cartas iguales!");
         } else {
@@ -466,7 +463,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (existingUser) {
             // Si el usuario ya existe, actualizamos sus puntos
             existingUser.score += score;
-        } else {
+        } else if (score > 5) {
             // Si el usuario no existe, lo agregamos a la lista
             users.push({ username: username, score: score });
         }
@@ -485,10 +482,21 @@ document.addEventListener("DOMContentLoaded", function () {
     function mostrarTopUsers() {
         // Obtener el contenedor donde se mostrarán los datos
         var content_top = document.getElementById("content_top_user");
+        var container_top = document.getElementById("container_top_user");
     
         // Obtener la lista de los mejores usuarios del localStorage para la dificultad actual
         var users = JSON.parse(localStorage.getItem(`topUsers_${difficulty}`)) || [];
-    
+        
+        if(content_top === undefined && content_top < "5"){
+            console.log("dentro");
+            container_top.style.visibility = "hidden";
+            console.log(container_top.style.visibility);
+
+        }
+        else if (content_top !== undefined){
+            container_top.style.visibility = "visible";
+            console.log("afuera");
+        }
         // Limpiar el contenido del contenedor antes de agregar los nuevos datos
         content_top.innerHTML = '';
     
