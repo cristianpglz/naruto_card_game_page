@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const menu_song = document.getElementById("img_menu");
     const button_pause = document.getElementById("img_music");
     const song = document.getElementById("music");
-    song.volume = 0.5;
+    song.volume = 0.03;
 
     // Cambiar la imagen y mutear/desmutear el audio al hacer clic en la imagen
     button_pause.addEventListener("click", function () {
@@ -183,6 +183,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     let flippedCards = [];
+    let waitingForComparison = false;
+    let timeFlip; // Definimos la variable timeFlip
+    
     function setTime() {
         switch (difficulty) {
             case "easy":
@@ -195,140 +198,104 @@ document.addEventListener("DOMContentLoaded", function () {
                 timeFlip = 2000; // 2 segundos
                 break;
             default:
-                timeFlip = 4000; // Valor predeterminado, 1 segundo
+                timeFlip = 4000; // Valor predeterminado, 4 segundos
         }
-        console.log(difficulty);
     }
+    
     function flipCard(card) {
-        setTime(difficulty);
         const currentSrc = card.src;
         const frontImage = card.getAttribute("data-front-image");
-        // Verifica si la carta está boca abajo (es la imagen de respaldo)
+        
+        // Verificar si ya hay 2 cartas volteadas o si se está esperando una comparación
+        if (waitingForComparison || flippedCards.length === 2) {
+            return;
+        }
+    
+        // Si la carta ya está volteada, no hacer nada
         if (currentSrc.includes("back_of_a_letter.png")) {
-            // Aplica la rotación manualmente usando la clase flipped
             card.classList.add("flipped");
-                // Cambia la imagen a la parte frontal de la carta
-                card.src = frontImage;
-                // Agrega la carta a la lista de cartas levantadas
-                flippedCards.push(card);
-                
-                console.log(flippedCards.length);
-                console.log(flippedCards[2]);
-                setTimeout(() => {
-                    if (flippedCards.length === 2){
-                        setTimeout(() => {
-                            comprobate();
-                        },timeFlip)
-                    }else if (flippedCards.length === 1 && flippedCards[2] === undefined) {
-                        console.log("Comprobando");
-                        // Realiza la comprobación después de un tiempo de espera
-                        setTimeout(() => {
-
-                            handleDiferentCards();
-                            
-                        }, timeFlip);
-                }
-                if(flippedCards.length >= 3){
-                    if (flippedCards[0].getAttribute("data-front-image") === flippedCards[1].getAttribute("data-front-image")) {
-                        // Cartas iguales, realiza alguna animación o mensaje
-                        handleEqualCards();
-
-                    }else {
-
-                        handleDiferentCards();
-
-                    }
-                }
-            });
-        }
-    }
-    function comprobate() {
-        // Verifica si las dos cartas levantadas son iguales
-        if (flippedCards[0].getAttribute("data-front-image") === flippedCards[1].getAttribute("data-front-image")) {
-            // Cartas iguales, realiza alguna animación o mensaje
-            console.log();
-            handleEqualCards();
-            console.log("¡Cartas iguales!");
+            card.src = frontImage;
+            flippedCards.push(card);
+    
+            // Si hay 2 cartas volteadas, iniciar la comparación
+            if (flippedCards.length === 1 && flippedCards.length === 2) {
+                waitingForComparison = true;
+                setTimeout(compareCards, timeFlip);
+            }
         } else {
-            // Cartas diferentes, voltea ambas cartas después de un tiempo de espera
-            handleDiferentCards();
-            console.log("¡Cartas diferentes!");
+            // Si la carta ya está volteada, no hacer nada
+            return;
         }
     }
-       function handleDiferentCards() {
-               // Baja las cartas que estén levantadas sin animación
-               for (const flippedCard of flippedCards) {
-                   flippedCard.src = "./IMGs/necessary_images/back_of_a_letter.png";
-                   flippedCard.classList.remove("flipped");
-                }
-               // Limpia la lista de cartas levantadas
-               flippedCards = [];
-               card.classList.add("flipped");
-               // Cambia la imagen a la parte frontal de la carta
-               card.src = frontImage;
     
-               // Agrega la carta a la lista de cartas levantadas
-               flippedCards.push(card); 
-               flippedCards = [];  
-       }
-        // Declarar un array para almacenar las cartas adivinadas
-        let guessedCards = [];
     
-        function handleEqualCards() {
-            
-            // Agrega las cartas adivinadas al array de cartas adivinadas
-            guessedCards.push(flippedCards[0]);
-            guessedCards.push(flippedCards[1]);
-            if(flippedCards[2] !== undefined){
-                flippedCards[2].src = "./IMGs/necessary_images/back_of_a_letter.png";
-                flippedCards[2].classList.remove("flipped");  
-            }
-            // Muestra las cartas adivinadas todo el tiempo
-            for (const card of guessedCards) {
-                card.classList.add("guessed");
-            }
-            console.log(difficulty);
-                // Cartas iguales, realiza alguna animación o mensaje
-                // Incrementa los puntos según la dificultad
-                let pointsIncrement;
-                let gifPath;
-                switch (difficulty) {
-                    case "easy":
-                        pointsIncrement = 5;
-                        gifPath = "./GIFTs/5_points.gif";
-                        break;
-                    case "half":
-                        pointsIncrement = 7;
-                        gifPath = "./GIFTs/7_points.gif";
-                        break;
-                    case "difficult":
-                        pointsIncrement = 10;
-                        gifPath = "./GIFTs/10_points.gif";
-                        break;
-                    default:
-                        pointsIncrement = 5;
-                        gifPath = "./GIFTs/5_points.gif";
-                }
-                // Cambia el src de la imagen
-                const gifAlertElement = document.getElementById("points_alert");
-                gifAlertElement.src = gifPath;
-            
-                // Hacer visible el elemento
-                const alertPointsElement = document.getElementById("alert_points");
-                alertPointsElement.style.visibility = "visible";
-            
-                // Agrega un temporizador para ocultar el elemento después de cierto tiempo (por ejemplo, 1.5 segundos)
-                setTimeout(() => {
-                    alertPointsElement.style.visibility = "hidden";
-                    // Incrementa los puntos y actualiza el marcador
-                    points += pointsIncrement;
-                    updatePointsMarker();
-                    // Limpia la lista de cartas dadas vuelta
-                    flippedCards = [];
-                }, 1500);
-                flippedCards = [];
     
+    
+    
+    
+    function compareCards() {
+        if (flippedCards.length === 2) {
+            if (flippedCards[0].getAttribute("data-front-image") === flippedCards[1].getAttribute("data-front-image")) {
+                handleEqualCards();
+            } else {
+                handleDifferentCards();
             }
+        }
+    }
+    
+    function handleDifferentCards() {
+        // Voltear las cartas después de un tiempo determinado
+        setTimeout(() => {
+            for (const flippedCard of flippedCards) {
+                flippedCard.src = "./IMGs/necessary_images/back_of_a_letter.png";
+                flippedCard.classList.remove("flipped");
+            }
+            // Restaurar la capacidad de voltear cartas después de la comparación
+            flippedCards = [];
+            waitingForComparison = false;
+        }, timeFlip);
+    }
+    
+    function handleEqualCards() {
+        // Agrega las cartas adivinadas al array de cartas adivinadas
+        for (const card of flippedCards) {
+            card.classList.add("guessed");
+        }
+        // Incrementar los puntos según la dificultad
+        let pointsIncrement;
+        switch (difficulty) {
+            case "easy":
+                pointsIncrement = 5;
+                break;
+            case "half":
+                pointsIncrement = 7;
+                break;
+            case "difficult":
+                pointsIncrement = 10;
+                break;
+            default:
+                pointsIncrement = 5;
+        }
+        points += pointsIncrement;
+        updatePointsMarker();
+        // Mostrar mensaje de puntos y ocultarlo después de un tiempo
+        const gifAlertElement = document.getElementById("points_alert");
+        gifAlertElement.src = `./GIFTs/${pointsIncrement}_points.gif`;
+        const alertPointsElement = document.getElementById("alert_points");
+        alertPointsElement.style.visibility = "visible";
+        setTimeout(() => {
+            alertPointsElement.style.visibility = "hidden";
+            // Restaurar la capacidad de voltear cartas después de la comparación
+            flippedCards = [];
+            waitingForComparison = false;
+        }, 1500);
+    }
+    
+    
+
+
+
+
     
     
     
@@ -408,12 +375,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 countdown_rest = 50;
                 break;
             case "difficult":
-                countdown_rest = 2;
+                countdown_rest = 7;
                 break;
             default:
                 countdown_rest = 60; // 60 segundos para easy
         }
-
         countdownElement.value = countdown_rest;
         
     
@@ -442,6 +408,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
     }
+    var users = JSON.parse(localStorage.getItem(`topUsers_${difficulty}`)) || [];
     // Función para guardar los datos del usuario al finalizar la partida
     function guardarPuntos() {
         // Obtener el nombre de usuario y los puntos del sessionStorage
@@ -449,25 +416,27 @@ document.addEventListener("DOMContentLoaded", function () {
         var score = parseInt(document.getElementById('points').value); // Parsear el puntaje a un número entero
         
         // Verificar si el nombre de usuario y el puntaje son válidos
-        if (!username || isNaN(score)) {
-            alert('Por favor, ingresa un nombre de usuario y un puntaje válido.');
+        if (!username || isNaN(score) || score <= 5) {
             return;
         }
+        
     
-        // Obtener la lista de los mejores usuarios del localStorage para la dificultad actual
-        var users = JSON.parse(localStorage.getItem(`topUsers_${difficulty}`)) || [];
+
     
         // Verificar si el usuario ya existe en la lista de mejores usuarios
         var existingUser = users.find(user => user.username === username);
-    
         if (existingUser) {
             // Si el usuario ya existe, actualizamos sus puntos
             existingUser.score += score;
+            saveTopUsers();
         } else if (score > 5) {
             // Si el usuario no existe, lo agregamos a la lista
             users.push({ username: username, score: score });
+            saveTopUsers();
         }
     
+    }
+    function saveTopUsers() {
         // Ordenar los usuarios por puntuación de mayor a menor
         users.sort((a, b) => b.score - a.score);
         
@@ -487,13 +456,13 @@ document.addEventListener("DOMContentLoaded", function () {
         // Obtener la lista de los mejores usuarios del localStorage para la dificultad actual
         var users = JSON.parse(localStorage.getItem(`topUsers_${difficulty}`)) || [];
         
-        if(content_top === undefined && content_top < "5"){
+        if(users.length < 1 || content_top === undefined){
             console.log("dentro");
             container_top.style.visibility = "hidden";
             console.log(container_top.style.visibility);
 
         }
-        else if (content_top !== undefined){
+        else if (users.length >= 1 && content_top !== undefined) {
             container_top.style.visibility = "visible";
             console.log("afuera");
         }
