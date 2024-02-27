@@ -22,7 +22,10 @@ main, header, footer{
     background-color:rgba(169, 169, 169, 0.515);
     padding: 3%;
 }
-
+hr{
+    display: flex;
+    padding-top: 50px;
+}
 
 /*IDs*/
 #formEntry{

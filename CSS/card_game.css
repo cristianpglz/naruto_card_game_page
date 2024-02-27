@@ -149,12 +149,6 @@ footer{
   justify-items: center;
 }
 
-#all_the_cards{
-  display: grid;
-  justify-content: center;
-  grid-template-columns: repeat(3,1fr);
-}
-
 #container_marker{
   grid-column: 2;
   display: grid;

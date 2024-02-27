@@ -1,6 +1,3 @@
-<!--
-Online store project for the MASTERMIND academy
--->
 <!DOCTYPE html>
 <html lang="ES-es">
 <head>
@@ -19,12 +16,12 @@ Online store project for the MASTERMIND academy
         <nav id="container_song">
             <img id="img_music" class="styles_imgs" src="./IMGs/necessary_images/play_audio.png" alt="">
             <img id="img_menu" class="styles_imgs" src="./IMGs/necessary_images/song_menu.png" alt="">
-            <audio name="music"src="./sound/naruto_music.m4a" autoplay  preload="auto" loop id="music"></audio>
+            <audio name="music" src="./sound/naruto_music.m4a" autoplay  preload="auto" loop id="music"></audio>
         </nav>
         <img id="logo" src="./IMGs/necessary_images/png-konoha.png" alt="image main logo" width="300">
     </header>
     <main>
-        <div id="container_game"  data-chosen-size="3x3">
+        <div id="container_game" data-chosen-size="3x3">            
             <div id="overlay">
                 <div class="game-message-container">
                     <div id="start-screen">
@@ -32,7 +29,7 @@ Online store project for the MASTERMIND academy
                     </div>
                 </div>
             </div>
-            <div id="game-over-screen">
+            <div id="game-over-screen" style="display: none;">
                 <div class="game-message-container">
                     <div id="restart-screen">
                         <p id="restart_button" type="button">Reiniciar</p>
@@ -44,17 +41,7 @@ Online store project for the MASTERMIND academy
             </div>      
             <div id="container_cards">
                 <ul id="all_the_cards">
-                    <!-- Cartas predefinidas -->
-                    <li><img class="cards flipped" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter" onclick="flipCard(this)"></li>
-                    <li><img class="cards flipped" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter" onclick="flipCard(this)"></li>
-                    <li><img class="cards flipped" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter" onclick="flipCard(this)"></li>
-                    <li><img class="cards flipped" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter" onclick="flipCard(this)"></li>
-                    <li><img class="cards flipped" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter" onclick="flipCard(this)"></li>
-                    <li><img class="cards flipped" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter" onclick="flipCard(this)"></li>
-                    <li><img class="cards flipped" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter" onclick="flipCard(this)"></li>
-                    <li><img class="cards flipped" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter" onclick="flipCard(this)"></li>
-                    <li><img class="cards flipped" src="./IMGs/necessary_images/back_of_a_letter.png" alt="back_of_a_letter" onclick="flipCard(this)"></li>
-
+                    <canvas id="myCanvas" width="600" height="700"></canvas>
                 </ul>
             </div>
             <div id="container_marker">
@@ -82,7 +69,7 @@ Online store project for the MASTERMIND academy
                     <button class="skills_button">ver cartas 2s</button>
                     <button class="skills_button">descartar una pareja</button>
                     <button class="skills_button">hola</button>
-            </div>
+                </div>
             </div>
             <div id="container_top_user">
                 <div>
