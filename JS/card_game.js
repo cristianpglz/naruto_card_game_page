@@ -159,18 +159,21 @@ document.addEventListener("DOMContentLoaded", function () {
     
         function compareCards() {
             const [card1, card2] = flippedCards;
-    
+        
             if (card1.frontImage === card2.frontImage) {
                 // Cartas iguales
+                openGift();
             } else {
                 // Cartas diferentes
                 flipBackCard(card1);
                 flipBackCard(card2);
+                showGameOverScreen(); // Llama a showGameOverScreen después de comparar las cartas
             }
-    
+        
             flippedCards = [];
             canFlipMoreCards = true;
         }
+        
     
         function flipBackCard(card) {
             card.flipped = false;
@@ -202,46 +205,67 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         return array;
     }
-    
-    
-    
-
-    let flippedCards = [];
-    let waitingForComparison = false;
-    let timeFlip;
-
-    function flipCard(card) {
-        if (waitingForComparison || flippedCards.length === 2) {
-            return;
+    function openGift() {
+        let pointsToAdd = 0;
+        let giftPath;
+        switch (difficulty) {
+            case 'easy':
+                giftPath = 'GIFTs/5_points.gif';
+                pointsToAdd = 5;
+                break;
+            case 'half':
+                giftPath = 'GIFTs/7_points.gif';
+                pointsToAdd = 7;
+                break;
+            case 'difficult':
+                giftPath = 'GIFTs/10_points.gif';
+                pointsToAdd = 10;
+                break;
+            default:
+                console.error("Dificultad no reconocida");
+                return;
         }
-
-        card.flipped = true;
-        flippedCards.push(card);
-
-        if (flippedCards.length === 2) {
-            waitingForComparison = true;
-            setTimeout(compareCards, timeFlip);
-        }
+        
+        const giftImage = document.getElementById("points_alert");
+        giftImage.src = giftPath;
+    
+        // Hacer visible el elemento
+        giftImage.style.visibility = "visible";
+    
+        // Ocultar el elemento después de 3 segundos (3000 milisegundos)
+        setTimeout(function() {
+            giftImage.style.visibility = "hidden";
+        }, 1500); // Cambia este valor según el tiempo que desees que el elemento sea visible
+    
+        // Actualizar el marcador de puntos
+        updatePointsMarker(pointsToAdd);
     }
 
-    
 
-    function updatePointsMarker() {
+    function updatePointsMarker(pointsToAdd) {
         const pointsMarker = document.getElementById("points");
         if (pointsMarker) {
-            pointsMarker.value = points;
+            // Suma los puntos actuales al valor pasado como argumento
+            pointsMarker.value  = parseInt(pointsMarker.value) + pointsToAdd;
+            console.log("Puntos actualizados:", pointsMarker.textContent); // Verificar en la consola
         }
     }
+    
+    
+    
+    
 
     function rest_time() {
         countdown_rest--;
         countdownElement.value = countdown_rest;
         if (countdown_rest === 0) {
             countdownElement = 0;
+            showGameOverScreen(); // Llama a showGameOverScreen cuando el tiempo se agota
             return true;
         }
         return false;
     }
+    
 
     function showGameOverScreen() {
         const gameOverScreen = document.getElementById("game-over-screen");
