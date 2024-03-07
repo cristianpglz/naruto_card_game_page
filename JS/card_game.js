@@ -1,5 +1,4 @@
 // VARIABLES GENERALES
-var nick_user;
 var idInterval;
 var points = 0;
 
@@ -7,12 +6,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const historyFromLocalStorage = localStorage.getItem('history');
     const historyArray = JSON.parse(historyFromLocalStorage);
     const difficulty = historyArray.length > 0 ? historyArray[0].difficulty : 'easy';
-
     const menu_song = document.getElementById("img_menu");
     const button_pause = document.getElementById("img_music");
     const song = document.getElementById("music");
     song.volume = 0.03;
-
     var cardImages = []; // Define cardImages en el mismo ámbito donde se llama a flipCard
 
     button_pause.addEventListener("click", function () {
@@ -43,10 +40,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     cargarRutasDeImagenes('IMGs/game_characters')
     .then(function (imagePaths) {
-        if (imagePaths.length < 6) {
+        if (imagePaths.length < 24) {
             console.error("No hay suficientes imágenes para inicializar el juego.");
             return;
         }
+        
         initializeCardGame(imagePaths);
     })
     .catch(function (error) {
@@ -74,54 +72,75 @@ document.addEventListener("DOMContentLoaded", function () {
                 return [];
             });
     }
-    
-    
-    var backImages = []; // Array que contiene las imágenes de respaldo para cada carta
-    var frontImages = []; // Array que contiene las imágenes frontales de cada carta
 
+    // Definir variables para el tamaño de las cartas y la cantidad total de cartas
+    var cardWidth;
+    var cardHeight;
+    var cardsOnBoard;
+    // Definir función para determinar el tamaño de las cartas y la cantidad total de cartas
+    function calculateBoardSize(size) {
+        var size = chosen_size;
+        switch (size) {
+            case "nine":
+                cardWidth = 130;
+                cardHeight = 190;
+                cardsOnBoard = 9;
+                break;
+            case "sixteen":
+                cardWidth = 90;
+                cardHeight = 130;
+                cardsOnBoard = 16;
+                break;
+            case "twenty-five":
+                cardWidth = 70;
+                cardHeight = 100;
+                cardsOnBoard = 25;
+                break;
+            default:
+                cardWidth = 130;
+                cardHeight = 190;
+                cardsOnBoard = 9;
+                break;
+        }
+        return { cardWidth, cardHeight, cardsOnBoard };
+    }
+    
 
-    function initializeCardGame(imagePaths) {
+    function initializeCardGame(imagePaths, startX, startY) {
+        
         var canvas = document.getElementById('myCanvas');
         var ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-        var cardWidth = 130;
-        var cardHeight = 190;
-        var startX = 50;
-        var startY = 50;
-    
-        var cards = [];
-        var frontImages = [];
+        
+        // Llamada a calculateBoardSize para establecer el tamaño de las cartas y la cantidad total de cartas
+        var { cardWidth, cardHeight, cardsOnBoard } = calculateBoardSize();
+        
+        // Definir la imagen de respaldo de la carta
         var backImage = "./IMGs/necessary_images/back_of_a_letter.png";
-    
-        // Verificar si hay suficientes imágenes para las cartas frontales
-        if (!imagePaths || imagePaths.length < 5) {
-            console.error("No hay suficientes imágenes para inicializar el juego.");
-            return;
-        }
-    
-        // Seleccionar imágenes aleatorias para las cartas frontales
-        var randomImagePaths = shuffleArray(imagePaths.slice()); 
-        for (let i = 0; i < 5; i++) {
-            frontImages.push(randomImagePaths[i]);
-        }
-    
-        // Obtener tres imágenes aleatorias diferentes
-        const uniqueImages = shuffleArray(imagePaths).slice(0, 3);
-        // Obtener tres copias de cada una de las imágenes únicas
-        const pairedImages = [].concat(uniqueImages, uniqueImages, uniqueImages);
-    
-        // Mezclar el array de imágenes emparejadas
-        const shuffledPairedImages = shuffleArray(pairedImages);
-    
-        for (let i = 0; i < 9; i++) {
-            const col = i % 3;
-            const row = Math.floor(i / 3);
+        
+        // Inicializar el array cards
+        var cards = [];
+        
+        // Lógica para dibujar las cartas en el canvas
+        for (let i = 0; i < cardsOnBoard; i++) {
+            const col = i % Math.sqrt(cardsOnBoard);
+            const row = Math.floor(i / Math.sqrt(cardsOnBoard));
             var x = startX + col * (cardWidth + 20);
             var y = startY + row * (cardHeight + 20);
             drawCard(ctx, backImage, x, y, cardWidth, cardHeight);
-            cards.push({ x: x, y: y, width: cardWidth, height: cardHeight, flipped: false, id: i, frontImage: frontImages[i % 5], backImage: backImage });
         }
+        
+        
+        // Lógica para inicializar las imágenes frontales de las cartas
+        var randomFrontImages = shuffleArray(imagePaths.slice()).slice(0, Math.round(cardsOnBoard / 2));
+        console.log(cardsOnBoard);
+        console.log(randomFrontImages);
+        for (let i = 0; i < cards.length; i++) {
+            const randomIndex = Math.floor(Math.random() * randomFrontImages.length);
+            const randomFrontImage = randomFrontImages.splice(randomIndex, 1)[0];
+            cards[i].frontImage = randomFrontImage;
+        }
+        
     
         canvas.addEventListener('click', function(event) {
             if (!canFlipMoreCards) return;
@@ -139,10 +158,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         });
-    
+        
         let flippedCards = [];
         let canFlipMoreCards = true;
-        let timeFlip = 1000; // Tiempo en milisegundos
+        let timeFlip; // Tiempo en milisegundos
+        timer_flip();
+        function timer_flip(){
+            switch(difficulty){
+                case "easy":
+                    timeFlip = 1000;
+                    break;
+                case "half":
+                    timeFlip = 500;
+                    break;
+                case "difficult":
+                    timeFlip = 100;
+                    break;
+                default:
+                    timeFlip = 1000;
+                    break;
+            }
+        }
     
         function flipCard(card) {
             if (!canFlipMoreCards || flippedCards.length >= 2) return;
@@ -153,27 +189,30 @@ document.addEventListener("DOMContentLoaded", function () {
     
             if (flippedCards.length === 2) {
                 canFlipMoreCards = false;
-                setTimeout(compareCards, timeFlip);
+                setTimeout(function() {
+                    compareCards();
+                    attempts_rest();
+                }, timeFlip);
             }
         }
     
         function compareCards() {
             const [card1, card2] = flippedCards;
-        
+    
             if (card1.frontImage === card2.frontImage) {
                 // Cartas iguales
                 openGift();
+                // Restar 2 al número de cartas restantes
+                cards_number -= 2;
             } else {
                 // Cartas diferentes
                 flipBackCard(card1);
                 flipBackCard(card2);
-                showGameOverScreen(); // Llama a showGameOverScreen después de comparar las cartas
             }
-        
+    
             flippedCards = [];
             canFlipMoreCards = true;
         }
-        
     
         function flipBackCard(card) {
             card.flipped = false;
@@ -182,17 +221,22 @@ document.addEventListener("DOMContentLoaded", function () {
     
         function redrawCard(card) {
             ctx.clearRect(card.x, card.y, card.width, card.height);
-            drawCard(ctx, card.flipped ? card.frontImage : card.backImage, card.x, card.y, card.width, card.height);
+            drawCard(ctx, card.flipped ? card.frontImage : backImage, card.x, card.y, card.width, card.height);
         }
     
-        function drawCard(ctx, imagePath, x, y, width, height) {
+        function drawCard(ctx, imagePath, x, y, width, height, startX, startY) {
             var img = new Image();
             img.onload = function() {
-                ctx.drawImage(img, x, y, width, height);
+                ctx.drawImage(img, x + startX, y + startY, width, height);
             };
             img.src = imagePath;
         }
+        console.log("Cartas inicializadas:", cards);
+        
     }
+    
+    
+    
     
     
     
@@ -247,59 +291,104 @@ document.addEventListener("DOMContentLoaded", function () {
         if (pointsMarker) {
             // Suma los puntos actuales al valor pasado como argumento
             pointsMarker.value  = parseInt(pointsMarker.value) + pointsToAdd;
-            console.log("Puntos actualizados:", pointsMarker.textContent); // Verificar en la consola
+            console.log("Puntos actualizados:", pointsMarker.value); // Verificar en la consola
         }
+    }
+    
+    var cards_number;
+    function cardsRest() {
+        var size = chosen_size;
+        switch(size){
+            case "nine":
+                cards_number = 9;
+                break;
+            case "sixteen":
+                cards_number = 16;
+                break;
+            case "twenty-five":
+                cards_number = 25;
+                break;
+            default:
+                cards_number = 9;
+                break;
+        }
+        return cards_number;
+    }
+    // Llamar a cardsRest() para inicializar cards_number
+    cards_number = cardsRest();
+    
+    function rest_time() {
+        countdown_rest--;
+        countdownElement.value = countdown_rest;
+        // Verificar si se ha agotado el tiempo
+        if (countdown_rest === 0 || cards_number === 1) {
+            countdownElement = 0;
+            showGameOverScreen();
+            return true;
+        }
+    return false;
     }
     
     
     
-    
 
-    function rest_time() {
-        countdown_rest--;
-        countdownElement.value = countdown_rest;
-        if (countdown_rest === 0) {
+    function showGameOverScreen() {
+        const gameOverScreen = document.getElementById("game-over-screen");
+        if (countdown_rest === 0 || cardImages.length === 1 || attempts_rest() === false) {
+            gameOverScreen.style.display = "flex";
+            gameOverScreen.style.visibility = "visible";
             countdownElement = 0;
+            startGame();
+        }
+
+    }
+    var attemptsElement = document.getElementById("attempts");
+    var attempts;
+
+    function attempts_rest() {
+        attempts--;
+        attemptsElement.value = attempts;
+        if (attempts === 0) {
+            attemptsElement = 0;
             showGameOverScreen(); // Llama a showGameOverScreen cuando el tiempo se agota
             return true;
         }
         return false;
     }
     
-
-    function showGameOverScreen() {
-        const gameOverScreen = document.getElementById("game-over-screen");
-        if (countdown_rest === 0) {
-            gameOverScreen.style.display = "block";
-            guardarPuntos();
-        }
-    }
-
     function startGame() {
         game_events();
         switch (difficulty) {
             case "easy":
                 countdown_rest = 60;
+                attempts = 6;
                 break;
             case "half":
                 countdown_rest = 50;
+                attempts = 5;
                 break;
             case "difficult":
                 countdown_rest = 7;
+                attempts = 4;
                 break;
             default:
                 countdown_rest = 60;
+                attempts = 6;
+                break;
         }
         countdownElement.value = countdown_rest;
-
+        attemptsElement.value = attempts;
         let timerReachedZero = false;
         let idInterval = setInterval(function () {
             timerReachedZero = rest_time();
-
+    
             if (timerReachedZero) {
                 clearInterval(idInterval);
                 showGameOverScreen();
-                guardarPuntos();
+            }
+            if (attempts === 0) {
+                clearInterval(idInterval);
+                showGameOverScreen();
             }
         }, 1000);
     }
@@ -328,7 +417,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function information_user() {
-        var user = sessionStorage.getItem('nick_name');
+        var user = nick_user;
         var game_user = document.getElementById('nick_name');
     
         if (user && game_user) {
@@ -351,7 +440,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let countdown_rest;
 
     function guardarPuntos() {
-        var username = sessionStorage.getItem('nick_name');
+        var username = nick_user;
         var score = parseInt(document.getElementById('points').value);
         
         if (!username || isNaN(score) || score <= 5) {
@@ -399,24 +488,29 @@ document.addEventListener("DOMContentLoaded", function () {
     mostrarTopUsers();
 
     function game_events() {
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
         const startButton = document.getElementById("start-button");
         startButton.addEventListener("click", function () {
-        // Aquí puedes agregar cualquier lógica adicional que necesites al hacer clic en el botón de inicio
-        hideStartScreen();
-        startGame(); // Iniciar el juego cuando se hace clic en el botón de inicio
-    });
-
-    let timerReachedZero = false;
-    let idInterval = setInterval(function () {
-        timerReachedZero = rest_time();
-
-        if (timerReachedZero) {
-            clearInterval(idInterval);
-            showGameOverScreen();
-            guardarPuntos();
-        }
-    }, 1000);
-}
+            // Aquí puedes agregar cualquier lógica adicional que necesites al hacer clic en el botón de inicio
+            hideStartScreen();
+            startGame(); // Iniciar el juego cuando se hace clic en el botón de inicio
+        });
+        
+        let timerReachedZero = false;
+        let idInterval = setInterval(function () {
+            timerReachedZero = rest_time();
+    
+            if (timerReachedZero) {
+                clearInterval(idInterval);
+                showGameOverScreen();
+                guardarPuntos();
+            }
+        }, 1000);
+    }
+    
 
     console.log("Calling get_Recover_data");    
 });

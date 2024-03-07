@@ -94,7 +94,6 @@ footer{
   background: rgba(0, 0, 0, 0.39); /* Fondo semitransparente */
   z-index: 3; /* Z-index mayor que el del juego */
   border-radius: 10%;
-  display: flex;
   justify-content: center;
   align-items: center;
   z-index: 3;
