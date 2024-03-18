@@ -11,7 +11,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const song = document.getElementById("music");
     song.volume = 0.03;
     var cardImages = []; // Define cardImages en el mismo ámbito donde se llama a flipCard
-
+    var imagePaths; // Define imagePaths en el mismo ámbito donde se llama a flipCard
+    var cards_number; // Define cards_number en el mismo ámbito donde se llama a flipCard
     button_pause.addEventListener("click", function () {
         song.muted = !song.muted;
         updateButtonState();
@@ -35,37 +36,112 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    
-    
+    function cardsRest() {
+        var size = chosen_size;
+        switch(size){
+            case "nine":
+                cards_number = 9;
+                break;
+            case "sixteen":
+                cards_number = 16;
+                break;
+            case "twenty-five":
+                cards_number = 25;
+                break;
+            default:
+                cards_number = 9;
+                break;
+        }
+        return cards_number;
+    }
+    // Llamar a cardsRest() para inicializar cards_number
+    cards_number = cardsRest();
+    function timerFlip(){
+        var timeFlip;
+        switch (difficulty){
+            case "easy":
+                timeFlip = 2000;
+                break;
+            case "medium": 
+                timeFlip = 1500;
+                break;
+            case "difficult": 
+                timeFlip = 1000;
+                break;
+            default: 
+                timeFlip = 2000;
+                break;
+        }
+        return timeFlip;
+    }
+    function boardsize(cardWidth, cardHeight, startX, startY,cards_number) {
+        var canvas = document.getElementById('myCanvas');
+        var ctx = canvas.getContext('2d');
+        var cols, rows;
 
+        switch (cards_number) {
+            case 9:
+                cols = 3;
+                rows = 3;
+                break;
+            case 16:
+                cols = 4;
+                rows = 4;
+                break;
+            case 25:
+                cols = 5;
+                rows = 5;
+                break;
+            // Agrega más casos según sea necesario para otras cantidades de cartas
+            default:
+                cols = 3;
+                rows = 3;
+                break;
+        }
+        
+    
+        // Calcula el ancho y alto del panel en función del número de columnas y filas
+        var panelWidth = cols * (cardWidth + 20) + startX;
+        var panelHeight = rows * (cardHeight + 20) + startY;
+    
+        // Ajusta el tamaño del canvas al tamaño del panel
+        canvas.width = panelWidth;
+        canvas.height = panelHeight;
+    }
     cargarRutasDeImagenes('IMGs/game_characters')
-    .then(function (imagePaths) {
-        if (imagePaths.length < 24) {
+    .then(function (selectedImages) {
+        // Aquí puedes continuar con el proceso de inicialización del juego usando las imágenes seleccionadas
+        imagePaths = selectedImages;
+        if (!imagePaths || imagePaths.length < cards_number / 2) {
             console.error("No hay suficientes imágenes para inicializar el juego.");
             return;
         }
         
-        initializeCardGame(imagePaths);
+        initializeCardGame(); // Initialize cards array and shuffle
     })
     .catch(function (error) {
         console.error("Error al cargar rutas de imágenes:", error);
     });
 
 
-
-
     function cargarRutasDeImagenes(carpeta) {
         const folderPath = `./${carpeta}/`;
-    
+
         return fetch(folderPath)
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('No se pudo obtener la lista de imágenes');
+                }
+                return response.text();
+            })
             .then(html => {
                 const doc = new DOMParser().parseFromString(html, 'text/html');
                 const files = [...doc.querySelectorAll('a')].map(link => link.getAttribute('href'));
-                const imagePaths = files.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
-                const pathsWithDot = imagePaths.map(path => `.${path}`);
-    
-                return pathsWithDot;
+                const validImageFiles = files.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
+                const pathsWithDot = validImageFiles.map(path => `.${path}`);
+                // Devuelve la mitad de las imágenes disponibles en imagePaths
+                return pathsWithDot.slice(0, Math.ceil(cards_number / 2));
+                
             })
             .catch(error => {
                 console.error("Error al obtener la lista de imágenes:", error);
@@ -73,82 +149,72 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-    // Definir variables para el tamaño de las cartas y la cantidad total de cartas
-    var cardWidth;
-    var cardHeight;
-    var cardsOnBoard;
-    // Definir función para determinar el tamaño de las cartas y la cantidad total de cartas
-    function calculateBoardSize(size) {
-        var size = chosen_size;
-        switch (size) {
-            case "nine":
-                cardWidth = 130;
-                cardHeight = 190;
-                cardsOnBoard = 9;
-                break;
-            case "sixteen":
-                cardWidth = 90;
-                cardHeight = 130;
-                cardsOnBoard = 16;
-                break;
-            case "twenty-five":
-                cardWidth = 70;
-                cardHeight = 100;
-                cardsOnBoard = 25;
-                break;
-            default:
-                cardWidth = 130;
-                cardHeight = 190;
-                cardsOnBoard = 9;
-                break;
-        }
-        return { cardWidth, cardHeight, cardsOnBoard };
-    }
-    
-
-    function initializeCardGame(imagePaths, startX, startY) {
         
+        
+        
+        
+
+    
+    
+    
+    function initializeCardGame() {
+    
         var canvas = document.getElementById('myCanvas');
         var ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Llamada a calculateBoardSize para establecer el tamaño de las cartas y la cantidad total de cartas
-        var { cardWidth, cardHeight, cardsOnBoard } = calculateBoardSize();
-        
-        // Definir la imagen de respaldo de la carta
-        var backImage = "./IMGs/necessary_images/back_of_a_letter.png";
-        
-        // Inicializar el array cards
+        var cardWidth = 130;
+        var cardHeight = 190;
+        var startX = 50;
+        var startY = 50;
         var cards = [];
-        
-        // Lógica para dibujar las cartas en el canvas
-        for (let i = 0; i < cardsOnBoard; i++) {
-            const col = i % Math.sqrt(cardsOnBoard);
-            const row = Math.floor(i / Math.sqrt(cardsOnBoard));
+        var backImage = "./IMGs/necessary_images/back_of_a_letter.png";
+        console.log(cards_number);
+        console.log(imagePaths);
+        // Verificar si hay suficientes imágenes para las cartas frontales
+        if (!imagePaths || imagePaths.length < cards_number / 2) {
+            console.error("No hay suficientes imágenes para inicializar el juego.");
+            return;
+        }
+        // Llama a la función boardsize para ajustar el tamaño del panel
+        boardsize(cardWidth, cardHeight, startX, startY,cards_number);
+    
+        // Mezclar las rutas de las imágenes
+        var shuffledImages = shuffleArray(imagePaths.slice());
+
+        // Duplicar las imágenes seleccionadas
+        var duplicatedImages = shuffledImages.concat(shuffledImages);
+
+        // Mezclar el orden de las cartas
+        var shuffledCards = shuffleArray(Array.from({ length: cards_number }, (_, i) => i));
+
+        // Crear las cartas en el tablero con la parte trasera y las imágenes aleatorias
+        for (let i = 0; i < cards_number; i++) {
+            const col = i % Math.sqrt(cards_number);
+            const row = Math.floor(i / Math.sqrt(cards_number));
             var x = startX + col * (cardWidth + 20);
             var y = startY + row * (cardHeight + 20);
-            drawCard(ctx, backImage, x, y, cardWidth, cardHeight);
+            drawCard(ctx, backImage, x, y, cardWidth, cardHeight); // Dibujar la parte trasera de las cartas
+            cards.push({ 
+                x: x, 
+                y: y, 
+                width: cardWidth, 
+                height: cardHeight, 
+                flipped: false, // Inicialmente, las cartas no están volteadas
+                id: i, 
+                frontImage: duplicatedImages[shuffledCards[i]], // Asignar imágenes aleatorias
+                backImage: backImage 
+            });
         }
-        
-        
-        // Lógica para inicializar las imágenes frontales de las cartas
-        var randomFrontImages = shuffleArray(imagePaths.slice()).slice(0, Math.round(cardsOnBoard / 2));
-        console.log(cardsOnBoard);
-        console.log(randomFrontImages);
-        for (let i = 0; i < cards.length; i++) {
-            const randomIndex = Math.floor(Math.random() * randomFrontImages.length);
-            const randomFrontImage = randomFrontImages.splice(randomIndex, 1)[0];
-            cards[i].frontImage = randomFrontImage;
-        }
-        
-    
+        // Variable global para controlar si se pueden voltear más cartas
+        var canFlipMoreCards = true;
+        // Variable para almacenar las cartas volteadas
+        let flippedCards = [];
         canvas.addEventListener('click', function(event) {
             if (!canFlipMoreCards) return;
-    
+        
             var rect = canvas.getBoundingClientRect();
             var mouseX = event.clientX - rect.left;
             var mouseY = event.clientY - rect.top;
-    
+        
             for (let i = 0; i < cards.length; i++) {
                 var card = cards[i];
                 if (!card.flipped && mouseX >= card.x && mouseX <= card.x + card.width &&
@@ -158,97 +224,78 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         });
-        
-        let flippedCards = [];
-        let canFlipMoreCards = true;
-        let timeFlip; // Tiempo en milisegundos
-        timer_flip();
-        function timer_flip(){
-            switch(difficulty){
-                case "easy":
-                    timeFlip = 1000;
-                    break;
-                case "half":
-                    timeFlip = 500;
-                    break;
-                case "difficult":
-                    timeFlip = 100;
-                    break;
-                default:
-                    timeFlip = 1000;
-                    break;
-            }
-        }
-    
+
+        // Función para voltear una carta
         function flipCard(card) {
             if (!canFlipMoreCards || flippedCards.length >= 2) return;
-    
-            card.flipped = true;
-            flippedCards.push(card);
+
+            card.flipped = true; // Voltear la carta
             redrawCard(card);
-    
+            flippedCards.push(card);
+
             if (flippedCards.length === 2) {
                 canFlipMoreCards = false;
-                setTimeout(function() {
-                    compareCards();
-                    attempts_rest();
-                }, timeFlip);
+                setTimeout(compareCards, timerFlip());
             }
         }
-    
-        function compareCards() {
-            const [card1, card2] = flippedCards;
-    
-            if (card1.frontImage === card2.frontImage) {
-                // Cartas iguales
-                openGift();
-                // Restar 2 al número de cartas restantes
-                cards_number -= 2;
-            } else {
-                // Cartas diferentes
-                flipBackCard(card1);
-                flipBackCard(card2);
-            }
-    
-            flippedCards = [];
-            canFlipMoreCards = true;
-        }
-    
+
         function flipBackCard(card) {
             card.flipped = false;
             redrawCard(card);
         }
-    
+
+        
+        // Redibujar una carta
         function redrawCard(card) {
             ctx.clearRect(card.x, card.y, card.width, card.height);
-            drawCard(ctx, card.flipped ? card.frontImage : backImage, card.x, card.y, card.width, card.height);
+            drawCard(ctx, card.flipped ? card.frontImage : card.backImage, card.x, card.y, card.width, card.height);
         }
-    
-        function drawCard(ctx, imagePath, x, y, width, height, startX, startY) {
+
+        // Dibujar una carta en el lienzo
+        function drawCard(ctx, imagePath, x, y, width, height) {
             var img = new Image();
             img.onload = function() {
-                ctx.drawImage(img, x + startX, y + startY, width, height);
+                ctx.drawImage(img, x, y, width, height);
             };
             img.src = imagePath;
         }
-        console.log("Cartas inicializadas:", cards);
+
+        function compareCards() {
+            const [card1, card2] = flippedCards;
         
-    }
-    
-    
-    
-    
-    
-    
-    
-    // Función para mezclar el array
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
+            if (card1.frontImage === card2.frontImage) {
+                // Cartas iguales
+                openGift();
+            } else {
+                // Cartas diferentes
+                flipBackCard(card1);
+                flipBackCard(card2);
+                attempts_rest();
+            }
+        
+            flippedCards = [];
+            canFlipMoreCards = true;
         }
-        return array;
+        
+    
+        // Función para mezclar el array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     function openGift() {
         let pointsToAdd = 0;
         let giftPath;
@@ -295,7 +342,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     
-    var cards_number;
+    
     function cardsRest() {
         var size = chosen_size;
         switch(size){
@@ -358,23 +405,49 @@ document.addEventListener("DOMContentLoaded", function () {
     
     function startGame() {
         game_events();
-        switch (difficulty) {
-            case "easy":
+        var size = chosen_size;
+        switch(size||difficulty){
+            case "nine"||"easy":
                 countdown_rest = 60;
-                attempts = 6;
+                attempts = 9;
                 break;
-            case "half":
+            case "nine"||"half":
                 countdown_rest = 50;
+                attempts = 7;
+                break;
+            case "nine"||"difficult":
+                countdown_rest = 40;
                 attempts = 5;
                 break;
-            case "difficult":
-                countdown_rest = 7;
-                attempts = 4;
+            case "sixteen"||"easy":
+                countdown_rest = 120;
+                attempts = 12;
+                break;
+            case "sixteen"||"half":
+                countdown_rest = 100;
+                attempts = 10;
+                break;
+            case "sixteen"||"difficult":
+                countdown_rest = 80;
+                attempts = 8;
+                break;
+            case "twenty-five"||"easy":
+                countdown_rest = 150;
+                attempts = 15;
+                break;
+            case "twenty-five"||"half":
+                countdown_rest = 120;
+                attempts = 13;
+                break;
+            case "twenty-five"||"difficult":
+                countdown_rest = 100;
+                attempts = 11;
                 break;
             default:
-                countdown_rest = 60;
-                attempts = 6;
+                countdown_rest = 100;
+                attempts = 9;
                 break;
+                        
         }
         countdownElement.value = countdown_rest;
         attemptsElement.value = attempts;
@@ -384,9 +457,11 @@ document.addEventListener("DOMContentLoaded", function () {
     
             if (timerReachedZero) {
                 clearInterval(idInterval);
+                guardarPuntos();
                 showGameOverScreen();
             }
             if (attempts === 0) {
+                guardarPuntos();
                 clearInterval(idInterval);
                 showGameOverScreen();
             }
@@ -438,32 +513,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let countdownElement = document.getElementById("countdown");
     let countdown_rest;
-
+    
     function guardarPuntos() {
-        var username = nick_user;
+        
+        var username = document.getElementById('nick_name').value;
         var score = parseInt(document.getElementById('points').value);
+        
         
         if (!username || isNaN(score) || score <= 5) {
             return;
         }
-
+    
         var users = JSON.parse(localStorage.getItem(`topUsers_${difficulty}`)) || [];
-        var existingUser = users.find(user => user.username === username);
-        if (existingUser) {
-            existingUser.score += score;
-            saveTopUsers();
+        
+        var existingUserIndex = users.findIndex(user => user.username === username); // Cambiado de find a findIndex para obtener el índice
+        if (existingUserIndex !== -1) { // Verificar si se encontró el usuario
+            users[existingUserIndex].score += score;
         } else if (score > 5) {
             users.push({ username: username, score: score });
-            saveTopUsers();
         }
+        saveTopUsers(users); // Pasar la lista de usuarios como argumento
     }
+    
 
-    function saveTopUsers() {
-        var users = JSON.parse(localStorage.getItem(`topUsers_${difficulty}`)) || [];
+    function saveTopUsers(users) {
         users.sort((a, b) => b.score - a.score);
         users = users.slice(0, 10);
+        console.log("Usuarios antes de guardar:", users); // Verificar los datos antes de guardarlos
         localStorage.setItem(`topUsers_${difficulty}`, JSON.stringify(users));
+        console.log("Usuarios guardados:", JSON.parse(localStorage.getItem(`topUsers_${difficulty}`))); // Verificar los datos después de guardarlos
     }
+    
 
     function mostrarTopUsers() {
         var content_top = document.getElementById("content_top_user");
@@ -488,17 +568,6 @@ document.addEventListener("DOMContentLoaded", function () {
     mostrarTopUsers();
 
     function game_events() {
-        const canvas = document.getElementById('myCanvas');
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        const startButton = document.getElementById("start-button");
-        startButton.addEventListener("click", function () {
-            // Aquí puedes agregar cualquier lógica adicional que necesites al hacer clic en el botón de inicio
-            hideStartScreen();
-            startGame(); // Iniciar el juego cuando se hace clic en el botón de inicio
-        });
-        
         let timerReachedZero = false;
         let idInterval = setInterval(function () {
             timerReachedZero = rest_time();
