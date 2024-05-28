@@ -14,7 +14,7 @@ var currentUser = "user"; // Define the username here or retrieve it from an ent
 document.addEventListener("DOMContentLoaded", function () {
     const historyFromLocalStorage = localStorage.getItem('history');
      const historyArray = JSON.parse(historyFromLocalStorage);
-     const difficulty = historyArray.length > 0 ? historyArray[0].difficulty : 'easy';
+     var difficulty = historyArray.length > 0 ? historyArray[0].difficulty : 'easy';
      const menu_song = document.getElementById("img_menu");
      const button_pause = document.getElementById("img_music");
      const song = document.getElementById("music");
@@ -1066,11 +1066,29 @@ document.addEventListener("DOMContentLoaded", function () {
         if (majorAvatar) {
             majorAvatar.src = avatar || "";
         }
-
+        var translate_difficulty;
+        function difficult_translate() {
+            switch (difficulty) {
+                case "easy":
+                    translate_difficulty = "Facil";
+                    break;
+                case "half":
+                    translate_difficulty = "Medio";
+                    break;
+                case "difficult":
+                    translate_difficulty = "Dificil";
+                    break;
+            
+                default:
+                    translate_difficulty = "Facil";
+                    break;
+            };
+            
+        }
+        difficult_translate();
         // Update difficulty in interface
         var status_difficulty = document.getElementById("set_difficulty");
-        status_difficulty.value = difficulty;  // Asegúrate de que `difficulty` esté definido en tu código
-
+        status_difficulty.value = translate_difficulty;  // Asegúrate de que `difficulty` esté definido en tu código
         // Retrieve user points from topUsers_{difficulty} and assign to points marker
         var topUsers = JSON.parse(localStorage.getItem(`topUsers_${difficulty}`)) || [];
         var userEntry = topUsers.find(entry => entry.username === user);
