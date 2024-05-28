@@ -166,7 +166,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 break;
         }
 
-        // Calculates the width and height of the panel based on the number of columns and rows        var panelWidth = cols * (cardWidth + 20) + startX;
+        // Calculates the width and height of the panel based on the number of columns and rows        
+        var panelWidth = cols * (cardWidth + 20) + startX;
         var panelHeight = rows * (cardHeight + 20) + startY;
         // Adjust the canvas size to the panel size       
         canvas.width = panelWidth;
@@ -177,12 +178,13 @@ document.addEventListener("DOMContentLoaded", function () {
     * Loads the image routes for the game characters.
     */
     cargarRutasDeImagenes('IMGs/game_characters')
-    .then(function (selectedImages) {
-        // Here you can continue the game initialization process using the selected images        imagePaths = selectedImages;
-        if (!imagePaths || imagePaths.length < cards_number / 2) {
-            console.error("No hay suficientes imágenes para inicializar el juego.");
-            return;
-        }
+        .then(function (selectedImages) {
+            // Here you can continue the game initialization process using the selected images        
+            imagePaths = selectedImages;
+            if (!imagePaths || imagePaths.length < cards_number / 2) {
+                console.error("No hay suficientes imágenes para inicializar el juego.");
+                return;
+            }
         
         initializeCardGame(); // Initialize cards array and shuffle
     })

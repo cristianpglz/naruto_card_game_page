@@ -55,7 +55,7 @@ function loadedDOM() {
     if (sessionStorage.getItem('error') != null) {
         error.innerText = sessionStorage.getItem('error');
         sessionStorage.removeItem('error');  
-
+    }
     // Add submit event to the form
     checkform.addEventListener('submit', checkForm);
     avatarItems = document.getElementsByClassName("avatar");
@@ -64,8 +64,6 @@ function loadedDOM() {
     }
     avatar.addEventListener('dragover', e => { e.preventDefault() })
     avatar.addEventListener('drop', cambiarImg)
-
-    }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
