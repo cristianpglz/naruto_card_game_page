@@ -9,6 +9,7 @@ body{
   height: 50%;
   padding-left: 20%;
   padding-right: 20%;
+  cursor: url("../IMGs/cursor/cursor_hand.png"), auto;
 }
 /* Works on Firefox */
 * {
@@ -28,13 +29,7 @@ body{
     background-color: rgba(239, 122, 27, 0.836);
     border-radius: 10px;
   }
-main, header, footer{
-  display: grid;
-  justify-content: center;
-  text-align: center;
-  background-color:rgba(169, 169, 169, 0.515);
-  justify-items: center;
-}
+
 
 input{
   background-color: rgba(0, 0, 0, 0.539);
@@ -84,9 +79,11 @@ footer{
 #start-button:hover{
   transition: 1s;
   transform: scale(2, 2);
+  cursor: url("../IMGs/cursor/cursor_take.png"), auto;
 }
 
 #game-over-screen {
+  display: none;
   visibility: hidden;
   position:absolute;
   width: 100%;
@@ -96,11 +93,32 @@ footer{
   border-radius: 10%;
   justify-content: center;
   align-items: center;
-  z-index: 3;
 }
 
 #game-message-container {
   width: 100%;
+}
+#menu_interaction_screen {
+  display: none;
+  position:absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.39); /* Fondo semitransparente */
+  z-index: 3; /* Z-index mayor que el del juego */
+  border-radius: 10%;
+  justify-content: center;
+  align-items: center;
+}
+
+#menu-screen {
+  position: absolute;;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 #restart-screen {
   position: absolute;;
@@ -117,6 +135,7 @@ footer{
 #restart_button:hover {
   transition: 1s;
   transform: scale(2, 2);
+  cursor: url("../IMGs/cursor/cursor_take.png"), auto;
 }
 
 #container_game{
@@ -131,13 +150,13 @@ footer{
   grid-template-rows: 1, 1fr;
   background-color: rgba(0, 0, 0, 0.421);
   border-radius: 10%;
-  cursor: url("../IMGs/cursor/cursor_hand.png"), auto;
 }
 #container_song{
   position:fixed;
   width: 50%;
   display: flex;
   flex-direction: row-reverse;
+  z-index: 4;
 }
 #img_song{
   width: 3%;
@@ -166,9 +185,28 @@ footer{
 #major_avatar{
   width: 3vw;
 }
-#container_cards{
+#container_cards {
+  position: relative;
   grid-row: 1;
+  width: fit-content; /* Ajusta el tamaño al contenido */
 }
+
+#all_the_cards {
+  padding-left: 20px;
+  padding-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Cambiado a 3 columnas para acomodar las 9 cartas */
+  grid-template-rows: repeat(3, 1fr); /* Cambiado a 3 filas para acomodar las 9 cartas */
+  position: absolute;
+  justify-items: center;
+  align-items: center;
+  width: 100%; /* Ajusta el ancho del grid al contenedor */
+  height: 100%; /* Ajusta el alto del grid al contenedor */
+}
+
+
+
+
 
 #formEntry{
   display: flex;
@@ -206,14 +244,99 @@ footer{
   margin: 10px;
   color: rgba(239, 122, 27, 0.836);
 }
-/*CLASS*/
-.cards {
-  transform-style: preserve-3d;
+#myCanvas {
+  position: relative; /* Ajusta el posicionamiento relativo */
+}
+#difficulty{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.421);
+  color: rgba(239, 122, 27, 0.836);
+  width: 15vw;
+  height: 5vh;
+  font-size: 1.5vw; 
   transition: 1s;
-  width: 5vw;
-  margin: 2vw;
-  border-radius: 10px;
-  cursor: pointer;
+}
+#difficulty:hover{
+  transform: scale(1.1, 1.1);
+  cursor: url("../IMGs/cursor/cursor_take.png"), auto;
+}
+
+#number_of_cards{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.421);
+  color: rgba(239, 122, 27, 0.836);
+  width: 15vw;
+  height: 5vh;
+  font-size: 1.5vw;
+  transition: 1s; 
+}
+#number_of_cards:hover{
+  transform: scale(1.1, 1.1);
+  cursor: url("../IMGs/cursor/cursor_take.png"), auto;
+}
+#difficulty_select_button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.421);
+  color: rgba(239, 122, 27, 0.836);
+  width: 15vw;
+  height: 5vh;
+  font-size: 1.5vw; 
+  transition: 1s;
+}
+#difficulty_select_button:hover{
+  transform: scale(1.1, 1.1);
+  cursor: url("../IMGs/cursor/cursor_take.png"), auto;
+}
+#size_select_button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.421);
+  color: rgba(239, 122, 27, 0.836);
+  width: 15vw;
+  height: 5vh;
+  font-size: 1.5vw; 
+  transition: 1s;
+}
+#size_select_button:hover{
+  transform: scale(1.1, 1.1);
+  cursor: url("../IMGs/cursor/cursor_take.png"), auto;
+}
+#not_points{
+  visibility: hidden; 
+  color: red;
+  font-size: small;
+}
+#limit_attepts{
+  visibility: hidden; 
+  color: red;
+  font-size: small;
+}
+
+/*CLASS*/
+.width_panel{
+  display: grid;
+  justify-content: center;
+  text-align: center;
+  background-color:rgba(169, 169, 169, 0.515);
+  justify-items: center;
+}
+.cards {
+  width: 100px; /* Ajusta el ancho según sea necesario */
+  height: 150px; /* Ajusta la altura según sea necesario */
+  background-image: url('../IMGs/necessary_images/back_of_a_letter.png'); /* Reemplaza 'URL_DE_LA_IMAGEN_DE_ATRÁS' con la URL de la imagen de la parte trasera de la carta */
+  background-size: cover;
+  justify-items: center;
+  align-items: center;
+  z-index: 1;
+  transition: transform 0.5s ease;
+  visibility: visible;
 }
 
 .skills_button{
@@ -245,7 +368,7 @@ footer{
 .skills_button:hover{
   background-color: rgba(0, 0, 0, 0.539);
   color: rgb(239, 122, 27);
-  cursor: pointer;
+  cursor: url("../IMGs/cursor/cursor_take.png"), auto;
 }
 
 .styles_imgs{
@@ -253,16 +376,25 @@ footer{
   width: 2vw;
   margin: 10px;
 }
+.buttons_menu{
+  transition: 1s;
+  margin: 4%;
+  font-size:2vw;
+  color: rgb(239, 122, 27);
+}
+.buttons_menu:hover{
+  transition: 1s;
+  transform: scale(1.5, 1.5);
+  cursor: url("../IMGs/cursor/cursor_take.png"), auto;
+  
+}
 .cards:hover{
+  background-color: #f0f0f0;
   transition: 1s;
   transform: scale(1.5, 1.5);
   cursor: url("../IMGs/cursor/cursor_take.png"), auto;
 }
-.flipped {
-    transform: rotateY(180deg);
-    transform: 0.5s ease; /* Puedes ajustar la duración y el tipo de transición según sea necesario */
-    transition: 1;
-}
+
 .flipped:hover{
   transform: rotateY(180deg) scale(1.5, 1.5);
   transition: transform 0.5s ease; /* Puedes ajustar la duración y el tipo de transición según sea necesario */
@@ -271,21 +403,31 @@ footer{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50%;
-  height: 30%;
+  width: 100%;
+  height: 100%;
 }
 
 
 
+.card-container {
+  position: absolute;
+  perspective: 1000px;
+}
 
-@keyframes pulse {
+
+
+.flip-animation {
+  animation: flip 0.5s ease-in-out; /* Ajusta la duración y el tipo de animación según tus preferencias */
+}
+
+@keyframes flip {
   0% {
-    transform: scale(1); /* Escala normal al inicio */
+      transform: rotateY(0deg);
   }
   50% {
-    transform: scale(1.4); /* Escala aumentada a la mitad de la animación */
+      transform: rotateY(90deg);
   }
   100% {
-    transform: scale(1); /* Vuelve a la escala normal al final */
+      transform: rotateY(180deg);
   }
 }

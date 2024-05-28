@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="./CSS/card_game.css">
 </head>
 <body>
-    <header>
+    <header class="width_panel">
         <nav id="container_song">
             <img id="img_music" class="styles_imgs" src="./IMGs/necessary_images/play_audio.png" alt="">
             <img id="img_menu" class="styles_imgs" src="./IMGs/necessary_images/song_menu.png" alt="">
@@ -20,7 +20,7 @@
         </nav>
         <img id="logo" src="./IMGs/necessary_images/png-konoha.png" alt="image main logo" width="300">
     </header>
-    <main>
+    <main class="width_panel">
         <div id="container_game" data-chosen-size="3x3">            
             <div id="overlay">
                 <div class="game-message-container">
@@ -29,21 +29,49 @@
                     </div>
                 </div>
             </div>
-            <div id="game-over-screen" style="display: none;">
+            <div id="game-over-screen">
                 <div class="game-message-container">
                     <div id="restart-screen">
                         <p id="restart_button" type="button">Reiniciar</p>
                     </div>
                 </div>  
             </div>
+            <div id="menu_interaction_screen">
+                <div class="game-message-container">
+                    <div id="menu-screen">
+                        <p id = "back-to-game" class="buttons_menu" type="button">Volver a Jugar</p>
+                        <p id = "change-difficulty" class="buttons_menu" type="button">Cambiar Dificultad</p>
+                        <div id="difficulty-select" style="display: none;">
+                            <select name="difficulty" id="difficulty">
+                                <option value="easy">Fácil</option>
+                                <option value="half">Intermedio</option>
+                                <option value="difficult">Difícil</option>
+                            </select>
+                            <p id="difficulty_select_button" type="button">Seleccionar</p>
+                        </div>
+                        <p id = "change-cards" class="buttons_menu" type="button">Cambiar Cantidad de Cartas</p>
+                        <div id="card-number-select" style="display: none;">
+                            <select name="number_of_cards" id="number_of_cards">
+                                <option value="nine">3x3</option>
+                                <option value="sixteen">4x4</option>
+                                <option value="twenty-five">5x5</option>
+                            </select>
+                            <p id="size_select_button" type="button">Seleccionar</p>
+                        </div>
+                        <p id = "exit" class="buttons_menu" type="button">Salir</p>
+                    </div>
+                    
+                </div>
+            </div>
+            
             <div id="alert_points">
                 <img id="points_alert" src="/GIFTs/5_points.gif" alt="">
             </div>      
             <div id="container_cards">
-                <ul id="all_the_cards">
-                    <canvas id="myCanvas" width="600" height="700"></canvas>
-                </ul>
+                <ul id="all_the_cards"></ul>
+                <canvas id="myCanvas" width="600" height="700"></canvas>
             </div>
+            
             <div id="container_marker">
                 <form id="formEntry" action="card_game.html">
                     <div id="user_information">
@@ -57,7 +85,6 @@
                     <div class="information">
                         <label for="points">Puntos Obtenidos</label>
                         <input class="marker" type="number" value="0" name="points" id="points" readonly>
-
                     </div>
                     <div class="information">
                         <label for="set_difficulty">dificultad</label>
@@ -66,12 +93,16 @@
                     <div class="information">
                         <label for="attempts">Intentos Restantes</label>
                         <input class="marker" type="number"  name="attempts" id="attempts" readonly>
-                    </div>                     
+                    </div>      
+                                   
                 </form>
                 <div id="container_button">
-                    <button class="skills_button">ver cartas 2s</button>
-                    <button class="skills_button">descartar una pareja</button>
-                    <button class="skills_button">hola</button>
+                    <button id="cards_view" class="skills_button">ver cartas 2s <span id="cards_view_br"></span></button>
+                    <button id="discard" class="skills_button">-1 pareja <span id="discard_br"></span></button>
+                    <button id="buy" class="skills_button">Comprar 1 Intento <span id="buy_br"></span></button>
+                    <p id="not_points">No tienes suficientes puntos</p>
+                    <p id="limit_attepts">Has alcanzado el limite de intentos</p>
+
                 </div>
             </div>
             <div id="container_top_user">
@@ -82,7 +113,7 @@
             </div>
         </div>
     </main>
-    <footer>
+    <footer class="width_panel">
         <p>Curso HTML, CSS y JS</p>
     </footer>
     <script src="./JS/userData.js"></script>

@@ -1,3 +1,5 @@
+// ENTRY FORM
+
 var nick_user;
 var chosen_difficulty;
 var chosen_size;
@@ -5,13 +7,11 @@ var geo_location;
 var avatar;
 var checkform;
 var itemImg;
-
+var score;
 // Event functions
 function checkForm(event) {
-    console.log("Checking form...");
     // Get values from form fields
     var nick_user = document.getElementById('nick_name').value.trim();  // Elimina espacios en blanco al principio y al final
-    console.log("nick_name:", nick_user);
 
     // Check length
     if (nick_user.length < 4 || nick_user.length > 10) {
@@ -29,12 +29,11 @@ function checkForm(event) {
         return false;
     }
 
-    console.log("After checks...");
 
     // Information is correct
     Recover_data();
     userHistory();
-    error.innerText = "";  // Reinicia el mensaje de error
+    error.innerText = "";  // Reset error message
     return true;
 }
 
@@ -52,22 +51,21 @@ function loadedDOM() {
     error = document.getElementById('error');
     checkform = document.getElementById('formEntry');
     avatar = document.getElementById('major_avatar');
-
     // Check for any shop.html errors
     if (sessionStorage.getItem('error') != null) {
         error.innerText = sessionStorage.getItem('error');
-        sessionStorage.removeItem('error');  // Elimina la clave 'error' después de mostrar el mensaje
-    }
+        sessionStorage.removeItem('error');  
 
     // Add submit event to the form
     checkform.addEventListener('submit', checkForm);
-    // Eventos del D&D
     avatarItems = document.getElementsByClassName("avatar");
     for (let item of avatarItems) {
         item.addEventListener('dragstart', move_img)
     }
     avatar.addEventListener('dragover', e => { e.preventDefault() })
     avatar.addEventListener('drop', cambiarImg)
+
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -77,7 +75,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function move_img(event) {
     itemImg = event.target;
-    console.log(itemImg.src);
 }
 
 function cambiarImg() {

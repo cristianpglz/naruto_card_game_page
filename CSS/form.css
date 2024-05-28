@@ -9,11 +9,12 @@ body{
     min-height: 500px;
     max-width: 500px;
     max-height: 500px;
-    padding-left: 33%;
+    padding-left: 39%;
     padding-right: 33%;
     margin-top: 30px;
     font-family: 'Poppins',sans-serif;
     font-size: 90%;
+    
 }
 main, header, footer{
     display: grid;
@@ -21,6 +22,12 @@ main, header, footer{
     text-align: center;
     background-color:rgba(169, 169, 169, 0.515);
     padding: 3%;
+}
+header {
+    border-radius: 50px  50px 0 0;
+}
+footer{
+    border-radius: 0 0 50px  50px;
 }
 hr{
     display: flex;
